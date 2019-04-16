@@ -13,7 +13,6 @@ def design_window():
     top_label = ttk.Label(root, text="Image Processor")
     top_label.grid(column=0, row=0)
 
-
     root.mainloop()  # Shows window
 
 
