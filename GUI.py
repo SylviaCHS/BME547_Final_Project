@@ -1,6 +1,5 @@
 from tkinter import *
 from tkinter import ttk
-from tkinter import filedialog
 
 
 def design_window():
@@ -24,6 +23,15 @@ def design_window():
     new_factor = StringVar()
     th_check = ttk.Checkbutton(root, text='New User', variable=new_factor, onvalue=True, offvalue=False)
     th_check.grid(column=1, row=2)
+
+    def import_file():
+        from tkinter import filedialog
+        filename = filedialog.askopenfilename(initialdir="/", title="Select file",
+                                                   filetypes=(("jpeg files", "*.jpeg"), ("all files", "*.*")))
+        print(filename)
+
+    import_btn = ttk.Button(root, text='Import File(s)', command=import_file)
+    import_btn.grid(column=2, row=1)
 
     root.mainloop()  # Shows window
 
