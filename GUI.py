@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter import filedialog
 
 
 def design_window():
@@ -19,6 +20,10 @@ def design_window():
     user_name = StringVar()
     name_entry = ttk.Entry(root, textvariable=user_name)
     name_entry.grid(column=1, row=1)
+
+    new_factor = StringVar()
+    th_check = ttk.Checkbutton(root, text='New User', variable=new_factor, onvalue=True, offvalue=False)
+    th_check.grid(column=1, row=2)
 
     root.mainloop()  # Shows window
 
