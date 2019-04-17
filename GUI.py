@@ -23,6 +23,7 @@ class GUI:
                                    onvalue=True, offvalue=False)
         th_check.grid(column=2, row=1)
 
+        # Get file names
         self.filename = StringVar()
         import_btn = ttk.Button(root, text='Import File(s)',
                                 command=lambda: self.import_file())
@@ -49,7 +50,7 @@ class GUI:
 
     def import_file(self):
         from tkinter import filedialog
-        self.filename = filedialog.askopenfilename(
+        self.filename = filedialog.askopenfilenames(
             initialdir="/", title="Select file",
             filetypes=(("JPEG files", "*.jpeg"),
                        ("PNG files", "*.png"),
@@ -58,7 +59,8 @@ class GUI:
                        ("all files", "*.*")))
 
     def run_function(self):
-        print('Running analysis...')
+        print('Running analysis...', self.filename)
+        print(type(self.filename))
 
 
 if __name__ == '__main__':
