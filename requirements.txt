@@ -1,3 +1,4 @@
 pytest
 pytest-pep8
 sphinx
+pillow

@@ -1,5 +1,6 @@
 from tkinter import *
-from tkinter import ttk, Canvas
+from tkinter import ttk
+from PIL import ImageTk, Image
 
 
 class GUI:
@@ -8,7 +9,7 @@ class GUI:
         root.title('Image Processor GUI')
 
         top_label = ttk.Label(root, text="Image Processor")
-        top_label.grid(column=0, row=0)
+        top_label.grid(column=0, row=0, columnspan=4)
 
         name_label = ttk.Label(root, text="User Name:")
         name_label.grid(column=0, row=1)
@@ -41,12 +42,26 @@ class GUI:
         dropdown = ttk.OptionMenu(root, self.method, *choices)
         dropdown.grid(column=3, row=2)
 
-        ttk.Separator(root, orient=HORIZONTAL).grid(column=0, row=3,
-                                                    columnspan=5, sticky='ew')
-
         run_btn = ttk.Button(root, text='Run Analysis',
                              command=lambda: self.run_function())
-        run_btn.grid(column=0, row=4)
+        run_btn.grid(column=0, row=3, columnspan=4)
+
+        # Seperate Analysis and Display
+        ttk.Separator(root, orient=HORIZONTAL).grid(column=0, row=4,
+                                                    columnspan=5, sticky='ew')
+        # Display original image (Need calling function)
+        image_obj = Image.open('IMG63.jpeg')
+        self.image = ImageTk.PhotoImage(image_obj.resize((96, 128)))
+        img_label = Label(root, image=self.image)  # assigns the image object to a label
+        img_label.grid(column=0, row=5, columnspan=2)
+
+        # Display processed image (Need calling function)
+        image_obj = Image.open('IMG63.jpeg')
+        self.image = ImageTk.PhotoImage(image_obj.resize((96, 128)))
+        img_label = Label(root, image=self.image)  # assigns the image object to a label
+        img_label.grid(column=2, row=5, columnspan=2)
+
+        
 
     def import_file(self):
         from tkinter import filedialog
