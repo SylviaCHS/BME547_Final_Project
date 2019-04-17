@@ -31,6 +31,21 @@ class GUI:
                                 command=lambda: self.import_file())
         import_btn.grid(column=2, row=1)
 
+        # Select processing method
+        method_label = ttk.Label(root, text="Processing Method:")
+        method_label.grid(column=2, row=2)
+
+        # Dropdown Menu
+        self.method = StringVar()
+        choices = ['Histogram Equalization', 'Contrast Stretching',
+                   'Log Compression', 'Reverse Video']
+        self.method.set('Histogram Equalization')  # set the default option
+        dropdown = ttk.OptionMenu(root, self.method, *choices)
+        dropdown.grid(column=3, row=2)
+        print(self.method.get())
+
+
+
     def import_file(self):
         from tkinter import filedialog
         self.filename = filedialog.askopenfilename(
