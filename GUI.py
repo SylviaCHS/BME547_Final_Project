@@ -33,7 +33,6 @@ class GUI:
         # Select processing method
         method_label = ttk.Label(root, text="Processing Method:")
         method_label.grid(column=2, row=2)
-
         # Dropdown Menu
         self.method = StringVar()
         choices = ['Histogram Equalization', 'Contrast Stretching',
@@ -46,22 +45,48 @@ class GUI:
                              command=lambda: self.run_function())
         run_btn.grid(column=0, row=3, columnspan=4)
 
-        # Seperate Analysis and Display
+        # Separate Analysis and Display
         ttk.Separator(root, orient=HORIZONTAL).grid(column=0, row=4,
                                                     columnspan=5, sticky='ew')
         # Display original image (Need calling function)
         image_obj = Image.open('IMG63.jpeg')
         self.image = ImageTk.PhotoImage(image_obj.resize((96, 128)))
-        img_label = Label(root, image=self.image)  # assigns the image object to a label
-        img_label.grid(column=0, row=5, columnspan=2)
+        img_label = Label(root, image=self.image)
+        img_label.grid(column=0, row=6, columnspan=1)
 
         # Display processed image (Need calling function)
-        image_obj = Image.open('IMG63.jpeg')
-        self.image = ImageTk.PhotoImage(image_obj.resize((96, 128)))
-        img_label = Label(root, image=self.image)  # assigns the image object to a label
-        img_label.grid(column=2, row=5, columnspan=2)
+        img_fil_label = Label(root, image=self.image)
+        img_fil_label.grid(column=2, row=6, columnspan=1)
 
-        
+        # Display histogram
+
+        hist_label = Label(root, image=self.image)
+        hist_label.grid(column=3, row=6, columnspan=1)
+
+        # Display timestamp when uploaded
+        timestamp_label = ttk.Label(root, text="Timestamp when uploaded:")
+        timestamp_label.grid(column=0, row=7)
+
+        # Display time to process the image(s)
+        duration_label = ttk.Label(root, text="Time to process the image(s):")
+        duration_label.grid(column=2, row=7)
+
+        # Select processing method
+        size_label = ttk.Label(root, text="Image size:")
+        size_label.grid(column=0, row=8)
+
+        # Download the image
+        save_label = ttk.Label(root, text="Save image(s) as:")
+        save_label.grid(column=2, row=8)
+        # Dropdown Menu
+        self.saveas = StringVar()
+        img_format = ['JPEG', 'PNG', 'TIFF']
+        self.saveas.set('Histogram Equalization')  # set the default option
+        dropdown2 = ttk.OptionMenu(root, self.saveas, *img_format)
+        dropdown2.grid(column=3, row=8)
+        # Download image or zip archive
+        download_btn = ttk.Button(root, text='Import File(s)', command=N)
+        download_btn.grid(column=4, row=8)
 
     def import_file(self):
         from tkinter import filedialog
