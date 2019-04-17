@@ -1,12 +1,9 @@
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, Canvas
 
 
 class GUI:
     def __init__(self, root):
-        def ok_function():
-
-            pass
 
         root.title('Image Processor GUI')
 
@@ -24,12 +21,12 @@ class GUI:
         th_check = ttk.Checkbutton(root, text='New User',
                                    variable=self.new_factor,
                                    onvalue=True, offvalue=False)
-        th_check.grid(column=1, row=2)
+        th_check.grid(column=2, row=1)
 
         self.filename = StringVar()
         import_btn = ttk.Button(root, text='Import File(s)',
                                 command=lambda: self.import_file())
-        import_btn.grid(column=2, row=1)
+        import_btn.grid(column=1, row=2)
 
         # Select processing method
         method_label = ttk.Label(root, text="Processing Method:")
@@ -42,9 +39,13 @@ class GUI:
         self.method.set('Histogram Equalization')  # set the default option
         dropdown = ttk.OptionMenu(root, self.method, *choices)
         dropdown.grid(column=3, row=2)
-        print(self.method.get())
 
+        ttk.Separator(root, orient=HORIZONTAL).grid(column=0, row=3,
+                                                    columnspan=5, sticky='ew')
 
+        run_btn = ttk.Button(root, text='Run Analysis',
+                             command=lambda: self.run_function())
+        run_btn.grid(column=0, row=4)
 
     def import_file(self):
         from tkinter import filedialog
@@ -55,6 +56,9 @@ class GUI:
                        ("TIFF files", "*.tiff"),
                        ("ZIP files", "*.zip"),
                        ("all files", "*.*")))
+
+    def run_function(self):
+        print('Running analysis...')
 
 
 if __name__ == '__main__':
