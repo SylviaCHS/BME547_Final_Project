@@ -1,9 +1,9 @@
 import skimage as ski
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def plot_his(image):
-    # image here should be an array
     his, bins = ski.exposure.histogram(image, normalize=True)
     plt.plot(bins, his)
     plt.show()
@@ -28,3 +28,9 @@ def log_com(image):
 def rev(image):
     img_rev = ski.util.invert(image)
     return img_rev
+
+
+def get_size(image):
+    img = ski.color.rgb2gray(image)
+    m, n = np.shape(img)
+    return m, n

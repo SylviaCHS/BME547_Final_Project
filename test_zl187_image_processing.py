@@ -48,3 +48,19 @@ def test_rev():
     img_rev = rev(image)
     img_rev_exp = np.array([-1, -2, -2, -1])
     assert float(img_rev.all()) == float(img_rev_exp.all())
+
+
+def test_get_size1():
+    from zl187_image_processing import get_size
+    image = ski.data.astronaut()
+    m, n = get_size(image)
+    m_exp = 512
+    assert float(m) == float(m_exp)
+
+
+def test_get_size2():
+    from zl187_image_processing import get_size
+    image = ski.data.astronaut()
+    m, n = get_size(image)
+    n_exp = 512
+    assert float(n) == float(n_exp)
