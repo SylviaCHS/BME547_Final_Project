@@ -1,3 +1,15 @@
+numpy
+flask
 pytest
 pytest-pep8
+pymodm
+sendgrid
+dnspython
+requests
+jupyter
+ipython
+scipy
+sphinx
+pillow
 scikit-image
+
