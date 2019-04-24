@@ -11,3 +11,4 @@ ipython
 scipy
 sphinx
 pillow
+matplotlib
