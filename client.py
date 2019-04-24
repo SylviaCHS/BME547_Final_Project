@@ -32,7 +32,7 @@ def main():
         "username": ID,
         "filename": filename
     }
-    r5 = requests.post("http://127.0.0.1:5000/api/get_image", json=imjson)
+    r5 = requests.get("http://127.0.0.1:5000/api/get_image", json=imjson)
     outfile = r5.json()
     I2_b64 = outfile["Image"]
     save_b64_image(I2_b64)
