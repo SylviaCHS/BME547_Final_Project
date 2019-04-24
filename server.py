@@ -16,8 +16,9 @@ from PIL import Image
 
 
 app = Flask(__name__)
+
+
 def read_file_as_b64(I_bytes):
-    #I = mpimg.imread(I_bytes, format="tiff")
     I_buf = io.BytesIO(I_bytes)
     b64_bytes = base64.b64encode(I_bytes)
     b64_string = str(b64_bytes, encoding='utf-8')
@@ -26,14 +27,15 @@ def read_file_as_b64(I_bytes):
 
 def save_b64_image(base64_string, extension):
     image_bytes = base64.b64decode(base64_string)
-    image_buf = io.BytesIO(image_bytes)
+    bytes_to_plot(image_bytes, extension)
+    return image_bytes
+
+
+def bytes_to_plot(bytes, extension):
+    image_buf = io.BytesIO(bytes)
     i = mpimg.imread(image_buf, format=extension)
-    plt.imshow(i, interpolation='nearest')
+    plot.imshow(i, interpolation='nearest')
     plt.show()
-    return image_bytes 
-
-
-
 
 
 def convert_to_tif(I):
@@ -62,7 +64,7 @@ def verify_newimage(filename, ID):
     u = User.objects.raw({"_id": ID}).first()
     x = True
     cursor = u.filenames
-    if cursor ==  []:
+    if cursor == []:
         x = True
 
     else:
@@ -83,7 +85,7 @@ def NewUser():
         u.save()
         outstr = "User saved successfully"
     else:
-        outstr = "User already exists. Please select new username"
+        outstr = "User already exists. Select new username"
     return jsonify(outstr)
 
 
@@ -95,7 +97,7 @@ def NewImage():
     rawimage = str(r["Image"])
     extension = str(r["extension"])
     y = verify_newuser(username)
-    
+
     if y is False:
         x = verify_newimage(filename, username)
 
@@ -120,20 +122,20 @@ def NewImage():
         else:
             outstr = "Image already exists. Please select another name."
     else:
-        outstr = "User does not exist. Please verify username or create new account"
+        outstr = "User does not exist. Verify username or create new account"
     return outstr
 
 
-@app.route("/api/get_image", methods = ["POST"])
+@app.route("/api/get_image", methods=["POST"])
 def GetImage():
     r = request.get_json()
     username = str(r["username"])
     filename = str(r["filename"])
-    
+
     x = verify_newuser(username)
     if x is False:
         y = verify_newimage(filename, username)
-        if y is False: 
+        if y is False:
             user = User.objects.raw({"_id": username}).first()
             Image_List = user.ImageFile
             userfiles = user.filenames
@@ -141,16 +143,16 @@ def GetImage():
             image = Image_List[idx]
             I = image["Image"]
             Ib64 = read_file_as_b64(I)
-            outjson = {"File": image["File"], 
+            outjson = {"File": image["File"],
                        "Image": Ib64,
                        "Process": image["Process"],
-                      }
+                       }
 
         else:
             outjson = "Image does not exist. Please upload image"
     else:
         outjson = "User does not exist. Please upload image"
     return jsonify(outjson)
-        
+
 # @app.route("/api/save_image", methods = ["POST"])
 # @app.route("/api/download_image", methods=["POST"])
