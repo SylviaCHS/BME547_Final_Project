@@ -11,3 +11,5 @@ ipython
 scipy
 sphinx
 pillow
+scikit-image
+
