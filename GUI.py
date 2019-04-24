@@ -107,8 +107,13 @@ class GUI:
 
     def run_function(self):
         ID = self.user_name.get()
+        new = self.new_factor.get()
+        if new == '1':
+            client.post_new_user(ID)
+            print('new user')
+
         self.filename, self.extension = os.path.splitext(self.filepath[0])
-        client.main(ID, self.filename, self.extension, self.filepath[0])
+        client.upload_file(ID, self.filename, self.extension, self.filepath[0])
 
 
 if __name__ == '__main__':
