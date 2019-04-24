@@ -9,3 +9,5 @@ requests
 jupyter
 ipython
 scipy
+sphinx
+pillow
