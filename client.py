@@ -28,17 +28,17 @@ def upload_file(ID, filename, extension, filepathname):
     r4 = requests.post("http://127.0.0.1:5000/api/new_image", json=userimage)
     print(r4.text)
 
-def receive_image_list():
 
+def get_image_list():
+
+    r5 = requests.get("/api/get_name/username")
+
+
+def receive_file():
     imjson = {
         "username": ID,
         "filename": filename
     }
-    r5 = requests.get("http://127.0.0.1:5000/api/image_list")
-
-
-def receive_file():
-
     r6 = requests.get("http://127.0.0.1:5000/api/get_image", json=imjson)
     outfile = r5.json()
     I2_b64 = outfile["Image"]
