@@ -33,14 +33,12 @@ def save_b64_image(base64_string, extension):  # Test me!
 def bytes_to_plot(bytes, extension):  # Test me!
     image_buf = io.BytesIO(bytes)
     i = mpimg.imread(image_buf, format=extension)
-    # plot.imshow(i, interpolation='nearest')
-    # plt.show()
+    return i
 
 
 def convert_to_tif(I):  # Test me!
     with BytesIO() as f:
         img = Image.open(io.BytesIO(I))
-        img.show()
         img.save(f, format='TIFF')
         data = f.getvalue()
     # i_buf = io.BytesIO(data)
@@ -136,10 +134,7 @@ def GetImage():
         y = verify_newimage(filename, username)
         if y is False:
             user = User.objects.raw({"_id": username}).first()
-            Image_List = user.ImageFile
-            userfiles = user.filenames
-            idx = userfiles.index(filename)
-            image = Image_List[idx]
+            image = find_image(filename, username)
             I = image["Image"]
             Ib64 = read_data_as_b64(I)
             outjson = {"File": image["File"],
@@ -153,5 +148,26 @@ def GetImage():
         outjson = "User does not exist. Please upload image"
     return jsonify(outjson)
 
-# @app.route("/api/save_image", methods = ["POST"])
-# @app.route("/api/download_image", methods=["POST"])
+
+def find_image(filename, username):
+    user = User.objects.raw({"_id": username}).first()
+    Image_List = user.ImageFile
+    userfiles = user.filenames
+    idx = userfiles.index(filename)
+    image = Image_List[idx]
+    return image
+
+
+@app.route("/api/process_image", methods=["POST"])
+def get_process():
+    r = request.get_json()
+    filename = r["filename"]
+    user = r["username"]
+    process = r["process"]
+    y = verify_newimage(filename, username)
+    if y is False:
+        Iraw = find_image(filename, username)
+
+
+# @app.route("/api/download_image", methods=["GET"])
+# @app.route("/api/filenames", methods=["GET"])
