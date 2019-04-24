@@ -17,6 +17,8 @@ from PIL import Image
 
 app = Flask(__name__)
 def read_file_as_b64(I_bytes):
+    #I = mpimg.imread(I_bytes, format="tiff")
+    I_buf = io.BytesIO(I_bytes)
     b64_bytes = base64.b64encode(I_bytes)
     b64_string = str(b64_bytes, encoding='utf-8')
     return b64_string
@@ -25,17 +27,14 @@ def read_file_as_b64(I_bytes):
 def save_b64_image(base64_string, extension):
     image_bytes = base64.b64decode(base64_string)
     image_buf = io.BytesIO(image_bytes)
-    #i = mpimg.imread(image_buf, format=extension)
-    i = bytes_to_plot(image_bytes)
+    i = mpimg.imread(image_buf, format=extension)
     plt.imshow(i, interpolation='nearest')
     plt.show()
     return image_bytes 
 
 
-def bytes_to_plot(image_bytes):
-    image_buf = io.BytesIO(image_bytes)
-    i = mpimg.imread(image_buf, format=extension)
-    return i
+
+
 
 def convert_to_tif(I):
     with BytesIO() as f:
@@ -47,7 +46,9 @@ def convert_to_tif(I):
     i = mpimg.imread(i_buf, format="tiff")
     plt.imshow(i, interpolation='nearest')
     plt.show()
-    return i
+    return data
+
+
 def verify_newuser(ID):
     users = User.objects.raw({})
     x = True
