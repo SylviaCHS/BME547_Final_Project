@@ -18,35 +18,35 @@ from PIL import Image
 app = Flask(__name__)
 
 
-def read_data_as_b64(I_bytes): #Test me!
+def read_data_as_b64(I_bytes):  # Test me!
     I_buf = io.BytesIO(I_bytes)
     b64_bytes = base64.b64encode(I_bytes)
     b64_string = str(b64_bytes, encoding='utf-8')
     return b64_string
 
 
-def save_b64_image(base64_string, extension): #Test me!
+def save_b64_image(base64_string, extension):  # Test me!
     image_bytes = base64.b64decode(base64_string)
     return image_bytes
 
 
-def bytes_to_plot(bytes, extension): #Test me!
+def bytes_to_plot(bytes, extension):  # Test me!
     image_buf = io.BytesIO(bytes)
     i = mpimg.imread(image_buf, format=extension)
-    #plot.imshow(i, interpolation='nearest')
-    #plt.show()
+    # plot.imshow(i, interpolation='nearest')
+    # plt.show()
 
 
-def convert_to_tif(I): #Test me!
+def convert_to_tif(I):  # Test me!
     with BytesIO() as f:
         img = Image.open(io.BytesIO(I))
         img.show()
         img.save(f, format='TIFF')
         data = f.getvalue()
-    i_buf = io.BytesIO(data)
-    i = mpimg.imread(i_buf, format="tiff")
-    plt.imshow(i, interpolation='nearest')
-    plt.show()
+    # i_buf = io.BytesIO(data)
+    # i = mpimg.imread(i_buf, format="tiff")
+    # plt.imshow(i, interpolation='nearest')
+    # plt.show()
     return data
 
 
