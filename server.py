@@ -125,7 +125,7 @@ def NewImage():
     return outstr
 
 
-@app.route("/api/get_image", methods=["POST"])
+@app.route("/api/get_image", methods=["GET"])
 def GetImage():
     r = request.get_json()
     username = str(r["username"])
