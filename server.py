@@ -18,27 +18,26 @@ from PIL import Image
 app = Flask(__name__)
 
 
-def read_file_as_b64(I_bytes):
+def read_data_as_b64(I_bytes): #Test me!
     I_buf = io.BytesIO(I_bytes)
     b64_bytes = base64.b64encode(I_bytes)
     b64_string = str(b64_bytes, encoding='utf-8')
     return b64_string
 
 
-def save_b64_image(base64_string, extension):
+def save_b64_image(base64_string, extension): #Test me!
     image_bytes = base64.b64decode(base64_string)
-    bytes_to_plot(image_bytes, extension)
     return image_bytes
 
 
-def bytes_to_plot(bytes, extension):
+def bytes_to_plot(bytes, extension): #Test me!
     image_buf = io.BytesIO(bytes)
     i = mpimg.imread(image_buf, format=extension)
-    plot.imshow(i, interpolation='nearest')
-    plt.show()
+    #plot.imshow(i, interpolation='nearest')
+    #plt.show()
 
 
-def convert_to_tif(I):
+def convert_to_tif(I): #Test me!
     with BytesIO() as f:
         img = Image.open(io.BytesIO(I))
         img.show()
@@ -142,7 +141,7 @@ def GetImage():
             idx = userfiles.index(filename)
             image = Image_List[idx]
             I = image["Image"]
-            Ib64 = read_file_as_b64(I)
+            Ib64 = read_data_as_b64(I)
             outjson = {"File": image["File"],
                        "Image": Ib64,
                        "Process": image["Process"],
