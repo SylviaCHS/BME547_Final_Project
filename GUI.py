@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter import ttk
 from PIL import ImageTk, Image
+import os
+import client
 
 
 class GUI:
@@ -24,8 +26,8 @@ class GUI:
                                    onvalue=True, offvalue=False)
         th_check.grid(column=2, row=1)
 
-        # Get file names
-        self.filename = StringVar()
+        # Get file path
+        self.filepath = StringVar()
         import_btn = ttk.Button(root, text='Import File(s)',
                                 command=lambda: self.import_file())
         import_btn.grid(column=1, row=2)
@@ -95,7 +97,7 @@ class GUI:
 
     def import_file(self):
         from tkinter import filedialog
-        self.filename = filedialog.askopenfilenames(
+        self.filepath = filedialog.askopenfilenames(
             initialdir="/", title="Select file",
             filetypes=(("JPEG files", "*.jpeg"),
                        ("PNG files", "*.png"),
@@ -104,8 +106,9 @@ class GUI:
                        ("all files", "*.*")))
 
     def run_function(self):
-        print('Running analysis...', self.filename)
-        print(type(self.filename))
+        ID = self.user_name.get()
+        self.filename, self.extension = os.path.splitext(self.filepath[0])
+        client.main(ID, self.filename, self.extension, self.filepath[0])
 
 
 if __name__ == '__main__':
