@@ -7,12 +7,8 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
 
-def main():
-    ID = "Kim_ImageLoadTest2"
+def main(ID, filename, extension, filepathname):
     Image_List = []
-    filename = "TestImage"
-    extension = "png"
-    filepathname = r"C:\Users\lenno\OneDrive\Documents\KimAndRev copy.png"
     user = {
         "username": ID,
     }
