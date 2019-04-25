@@ -52,23 +52,38 @@ class GUI:
                                                     columnspan=5, sticky='ew')
 
         # Load image locally
-        download_btn = ttk.Button(root, text='Load File(s)', command=N)
+        download_btn = ttk.Button(root, text='Load File(s)', command=lambda: self.load_function())
         download_btn.grid(column=0, row=5)
+
+        # List box to display list of file names
+        self.image_names = []
+        self.name_list = Listbox(root, height=1, selectmode=MULTIPLE)
+        # Selectmode can be SINGLE, BROWSE, MULTIPLE or EXTENDED. Default BROWSE
+        self.name_list.grid(column=0, row=6, sticky=(N, W, E, S))
+
+        # Scroll bar
+        scroll = Scrollbar(root, orient=VERTICAL, command=self.name_list.yview)
+        scroll.grid(column=0, row=6, sticky=(N, E, S))
+        self.name_list['yscrollcommand'] = scroll.set
+        scroll = Scrollbar(root, orient=HORIZONTAL, command=self.name_list.xview)
+        scroll.grid(column=0, row=6, sticky=(W, E, S))
+        self.name_list['xscrollcommand'] = scroll.set
+
 
         # Display original image (Need calling function)
         image_obj = Image.open('IMG63.jpeg')
         self.image = ImageTk.PhotoImage(image_obj.resize((96, 128)))
         img_label = Label(root, image=self.image)
-        img_label.grid(column=0, row=6, columnspan=1)
+        img_label.grid(column=1, row=6, columnspan=1)
 
         # Display processed image (Need calling function)
         img_fil_label = Label(root, image=self.image)
-        img_fil_label.grid(column=2, row=6, columnspan=1)
+        img_fil_label.grid(column=3, row=6, columnspan=1)
 
         # Display histogram
 
         hist_label = Label(root, image=self.image)
-        hist_label.grid(column=3, row=6, columnspan=1)
+        hist_label.grid(column=4, row=6, columnspan=1)
 
         # Display timestamp when uploaded
         timestamp_label = ttk.Label(root, text="Timestamp when uploaded:")
@@ -99,11 +114,11 @@ class GUI:
         from tkinter import filedialog
         self.filepath = filedialog.askopenfilenames(
             initialdir="/", title="Select file",
-            filetypes=(("JPEG files", "*.jpeg"),
+            filetypes=(("all files", "*.*"),
+                       ("JPEG files", "*.jpeg"),
                        ("PNG files", "*.png"),
                        ("TIFF files", "*.tiff"),
-                       ("ZIP files", "*.zip"),
-                       ("all files", "*.*")))
+                       ("ZIP files", "*.zip")))
 
     def run_function(self):
         ID = self.user_name.get()
@@ -111,9 +126,15 @@ class GUI:
         if new == '1':
             client.post_new_user(ID)
             print('new user')
-
-        self.filename, self.extension = os.path.splitext(self.filepath[0])
+        self.filename = self.filepath[0].split('/')[-1]
+        self.extension = os.path.splitext(self.filepath[0])[1]
         client.upload_file(ID, self.filename, self.extension, self.filepath[0])
+
+    def load_function(self):
+        self.image_names = client.get_image_list(self.user_name.get())
+        print(self.image_names)
+        for i in self.image_names:
+            self.name_list.insert(END, i)
 
 
 if __name__ == '__main__':
