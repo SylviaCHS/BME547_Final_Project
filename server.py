@@ -113,8 +113,8 @@ def NewImage():
     else:
         outstr = "User does not exist. Verify username or create new account"
     return outstr
-  
-  
+
+
 def save_image(user, filename, image_tif, process, latency):
     time = datetime.datetime.now()
     Image_Dict = {
@@ -132,7 +132,7 @@ def save_image(user, filename, image_tif, process, latency):
     outstr = "Image saved successfully"
     return outstr
 
-  
+
 @app.route("/api/get_name/image_list", methods=["GET"])
 def get_image_list():
     r = request.get_json()

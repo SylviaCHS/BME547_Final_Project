@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
 
-
 def post_new_user(ID):
     user = {
         "username": ID,
