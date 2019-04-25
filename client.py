@@ -29,9 +29,11 @@ def upload_file(ID, filename, extension, filepathname):
     print(r4.text)
 
 
-def get_image_list():
+def get_image_list(username):
 
-    r5 = requests.get("/api/get_name/username")
+    r5 = requests.get('http://127.0.0.1:5000/api/get_name/image_list', json={"username": username})
+    outfile = r5.json()
+    return outfile
 
 
 def receive_file():
