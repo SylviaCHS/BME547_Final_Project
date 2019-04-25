@@ -16,7 +16,6 @@ def post_new_user(ID):
 
 
 def upload_file(ID, filename, extension, filepathname):
-    #Image_List = []
 
     I = read_file_as_b64(filepathname)
     userimage = {
@@ -31,7 +30,8 @@ def upload_file(ID, filename, extension, filepathname):
 
 def get_image_list(username):
 
-    r5 = requests.get('http://127.0.0.1:5000/api/get_name/image_list', json={"username": username})
+    r5 = requests.get('http://127.0.0.1:5000/api/get_name/image_list',
+                      json={"username": username})
     outfile = r5.json()
     return outfile
 
@@ -58,7 +58,4 @@ def save_b64_image(base64_string):
     image_bytes = base64.b64decode(base64_string)
     image_buf = io.BytesIO(image_bytes)
     i = mpimg.imread(image_buf, format='tiff')
-    #plt.imshow(i, interpolation='nearest')
-    #plt.show()
     return i
-

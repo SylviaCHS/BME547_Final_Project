@@ -53,7 +53,7 @@ class GUI:
 
         # Load image locally
         load_btn = ttk.Button(root, text='Load File(s)',
-                                  command=lambda: self.load_function())
+                              command=lambda: self.load_function())
         load_btn.grid(column=0, row=5)
 
         # List box to display list of file names
@@ -109,7 +109,7 @@ class GUI:
         dropdown2.grid(column=3, row=8)
         # Download image or zip archive
         download_btn = ttk.Button(root, text='Download File(s)',
-                                  command=lambda: self.download_function() )
+                                  command=lambda: self.download_function())
         download_btn.grid(column=4, row=8)
 
     def import_file(self):
