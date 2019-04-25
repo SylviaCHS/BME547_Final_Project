@@ -52,23 +52,24 @@ class GUI:
                                                     columnspan=5, sticky='ew')
 
         # Load image locally
-        download_btn = ttk.Button(root, text='Load File(s)', command=lambda: self.load_function())
-        download_btn.grid(column=0, row=5)
+        load_btn = ttk.Button(root, text='Load File(s)',
+                                  command=lambda: self.load_function())
+        load_btn.grid(column=0, row=5)
 
         # List box to display list of file names
         self.image_names = []
         self.name_list = Listbox(root, height=1, selectmode=MULTIPLE)
-        # Selectmode can be SINGLE, BROWSE, MULTIPLE or EXTENDED. Default BROWSE
+
         self.name_list.grid(column=0, row=6, sticky=(N, W, E, S))
 
         # Scroll bar
         scroll = Scrollbar(root, orient=VERTICAL, command=self.name_list.yview)
         scroll.grid(column=0, row=6, sticky=(N, E, S))
         self.name_list['yscrollcommand'] = scroll.set
-        scroll = Scrollbar(root, orient=HORIZONTAL, command=self.name_list.xview)
+        scroll = Scrollbar(root, orient=HORIZONTAL,
+                           command=self.name_list.xview)
         scroll.grid(column=0, row=6, sticky=(W, E, S))
         self.name_list['xscrollcommand'] = scroll.set
-
 
         # Display original image (Need calling function)
         image_obj = Image.open('IMG63.jpeg')
@@ -107,7 +108,8 @@ class GUI:
         dropdown2 = ttk.OptionMenu(root, self.saveas, *img_format)
         dropdown2.grid(column=3, row=8)
         # Download image or zip archive
-        download_btn = ttk.Button(root, text='Download File(s)', command=N)
+        download_btn = ttk.Button(root, text='Download File(s)',
+                                  command=lambda: self.download_function() )
         download_btn.grid(column=4, row=8)
 
     def import_file(self):
@@ -135,6 +137,11 @@ class GUI:
         print(self.image_names)
         for i in self.image_names:
             self.name_list.insert(END, i)
+
+    def download_function(self):
+        index = self.name_list.curselection()
+        select_files = self.image_names[index[0]]
+        print(select_files)
 
 
 if __name__ == '__main__':
