@@ -13,7 +13,7 @@ import io
 from io import BytesIO
 import matplotlib.image as mpimg
 from PIL import Image
-
+import zl187_image_processing as Process
 
 app = Flask(__name__)
 
@@ -25,7 +25,7 @@ def read_data_as_b64(I_bytes):  # Test me!
     return b64_string
 
 
-def save_b64_image(base64_string, extension):  # Test me!
+def save_b64_image(base64_string):  # Test me!
     image_bytes = base64.b64decode(base64_string)
     return image_bytes
 
@@ -33,20 +33,22 @@ def save_b64_image(base64_string, extension):  # Test me!
 def bytes_to_plot(bytes, extension):  # Test me!
     image_buf = io.BytesIO(bytes)
     i = mpimg.imread(image_buf, format=extension)
-    # plot.imshow(i, interpolation='nearest')
-    # plt.show()
+    return i
+
+
+def plot_to_bytes(plot):
+    img = Image.fromarray(plot, "RGB")
+    f = BytesIO()
+    img.save(f, format='TIFF')
+    data = f.getvalue()
+    return data
 
 
 def convert_to_tif(I):  # Test me!
     with BytesIO() as f:
-        img = Image.open(io.BytesIO(I))
-        img.show()
+        img = Image.open(io.BytesIO(I)).convert("RGB")
         img.save(f, format='TIFF')
         data = f.getvalue()
-    # i_buf = io.BytesIO(data)
-    # i = mpimg.imread(i_buf, format="tiff")
-    # plt.imshow(i, interpolation='nearest')
-    # plt.show()
     return data
 
 
@@ -102,29 +104,35 @@ def NewImage():
 
         if x is True:
             user = User.objects.raw({"_id": username}).first()
-            time = datetime.datetime.now()
-            image = save_b64_image(rawimage, extension)
+
+            image = save_b64_image(rawimage)
             image_tif = convert_to_tif(image)
-            Image_Dict = {
-                            "File": filename,
-                            "Image": image_tif,
-                            "Process": "None",
-                            "Timestamp": time,
-                            "Latency": "None"
-                          }
-            Image_List = user.ImageFile
-            Image_List.append(Image_Dict)
-            filenames = user.filenames
-            filenames.append(filename)
-            user.save()
-            outstr = "Image saved successfully"
+            outstr = save_image(user, filename, image_tif, "None", "None")
         else:
             outstr = "Image already exists. Please select another name."
     else:
         outstr = "User does not exist. Verify username or create new account"
     return outstr
+  
+  
+def save_image(user, filename, image_tif, process, latency):
+    time = datetime.datetime.now()
+    Image_Dict = {
+                    "File": filename,
+                    "Image": image_tif,
+                    "Process": process,
+                    "Timestamp": time,
+                    "Latency": latency
+                 }
+    Image_List = user.ImageFile
+    Image_List.append(Image_Dict)
+    filenames = user.filenames
+    filenames.append(filename)
+    user.save()
+    outstr = "Image saved successfully"
+    return outstr
 
-
+  
 @app.route("/api/get_name/image_list", methods=["GET"])
 def get_image_list():
     r = request.get_json()
@@ -150,10 +158,7 @@ def GetImage():
         y = verify_newimage(filename, username)
         if y is False:
             user = User.objects.raw({"_id": username}).first()
-            Image_List = user.ImageFile
-            userfiles = user.filenames
-            idx = userfiles.index(filename)
-            image = Image_List[idx]
+            image = find_image(filename, username)
             I = image["Image"]
             Ib64 = read_data_as_b64(I)
             outjson = {"File": image["File"],
@@ -165,6 +170,66 @@ def GetImage():
             outjson = "Image does not exist. Please upload image"
     else:
         outjson = "User does not exist. Please upload image"
+    return jsonify(outjson)
+
+
+def find_image(filename, username):
+    user = User.objects.raw({"_id": username}).first()
+    Image_List = user.ImageFile
+    userfiles = user.filenames
+    idx = userfiles.index(filename)
+    image = Image_List[idx]
+    return image
+
+
+def process_image(iraw, process):  # Test me!
+    i_process = 0
+    if process == "his_eq":
+        i_process = Process.his_eq(iraw)
+    elif process == "con_str":
+        i_process = Process.con_str(iraw)
+    elif process == "log_com":
+        i_process = Process.log_com(iraw)
+    elif process == "rev":
+        i_process = Process.rev(iraw)
+    return i_process
+
+
+@app.route("/api/process_image", methods=["POST"])
+def get_process():
+    r = request.get_json()
+    t1 = datetime.datetime.now()
+    filename = str(r["filename"])
+    username = str(r["username"])
+    process = str(r["process"])
+    newfilename = filename+"_"+process
+    y = verify_newimage(filename, username)
+    if y is False:
+        user = User.objects.raw({"_id": username}).first()
+        List = user.ImageFile
+        I = find_image(filename, username)
+        Iraw = I["Image"]
+        Imat = bytes_to_plot(Iraw, "tiff")
+        [I_process, latency] = process_image(Imat, process)
+        # plt.imshow(I_process, interpolation="nearest")
+        # plt.show()
+        I_process_bytes = plot_to_bytes(I_process)
+        # I_test = bytes_to_plot(I_process_bytes, "tiff")
+        # plt.imshow(I_test, interpolation="nearest")
+        # plt.show()
+        t2 = datetime.datetime.now()
+        I_save = save_image(user, newfilename, I_process_bytes, t2, latency)
+        Ib64 = read_data_as_b64(I_process_bytes)
+        Imagetest = save_b64_image(Ib64)
+
+        image_buf = io.BytesIO(Imagetest)
+        outjson = {"File": newfilename,
+                   "Image": Ib64,
+                   "Process": process,
+                   }
+
+    else:
+        outjson = "Invalid data entry"
     return jsonify(outjson)
 
 
