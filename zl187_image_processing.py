@@ -32,6 +32,7 @@ def plot_his(image):
 
 
 def his_eq(image):
+    from skimage import img_as_ubyte
     color = check_color_or_gray(image)
     if color != 0:
         if color == 1:
@@ -45,7 +46,10 @@ def his_eq(image):
             img_eq2 = ski.exposure.equalize_hist(image[:, :, 1])
             img_eq3 = ski.exposure.equalize_hist(image[:, :, 2])
             img_eq = np.dstack((img_eq1, img_eq2, img_eq3))
-            img_eq = img_eq1.astype(float)
+
+            # EDIT KKL 2019/04/25: histogram equalization converts to float
+            img_eq = img_as_ubyte(img_eq)
+
             end = timeit.default_timer()
             time_process = str(end-start)
     else:

@@ -37,7 +37,7 @@ def bytes_to_plot(bytes, extension):  # Test me!
 
 
 def plot_to_bytes(plot):
-    img = Image.fromarray(plot)
+    img = Image.fromarray(plot, "RGB")
     f = BytesIO()
     img.save(f, format='TIFF')
     data = f.getvalue()
@@ -197,13 +197,17 @@ def get_process():
         Iraw = I["Image"]
         Imat = bytes_to_plot(Iraw, "tiff")
         [I_process, latency] = process_image(Imat, process)
-        plt.imshow(I_process, interpolation="nearest")
-        plt.show()
+        # plt.imshow(I_process, interpolation="nearest")
+        # plt.show()
         I_process_bytes = plot_to_bytes(I_process)
+        # I_test = bytes_to_plot(I_process_bytes, "tiff")
+        # plt.imshow(I_test, interpolation="nearest")
+        # plt.show()
         t2 = datetime.datetime.now()
         I_save = save_image(user, newfilename, I_process_bytes, t2, latency)
         Ib64 = read_data_as_b64(I_process_bytes)
         Imagetest = save_b64_image(Ib64)
+
         image_buf = io.BytesIO(Imagetest)
         outjson = {"File": newfilename,
                    "Image": Ib64,
