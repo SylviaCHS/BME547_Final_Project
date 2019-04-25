@@ -125,12 +125,14 @@ def NewImage():
     return outstr
 
 
-@app.route("/api/get_name/<username>", methods=["GET"])
-def get_image_list(username):
+@app.route("/api/get_name/image_list", methods=["GET"])
+def get_image_list():
+    r = request.get_json()
+    username = str(r["username"])
     x = verify_newuser(username)
     if x is True:
         user = User.objects.raw({"_id": username}).first()
-        outjson = {"Image List": user.filenames}
+        outjson = user.filenames
 
     else:
         outjson = "Image does not exist. Please upload image"
