@@ -4,25 +4,51 @@ import numpy as np
 
 def test_plot_his1():
     from zl187_image_processing import plot_his
-    image = np.array([1, 2, 3, 4])
+    image = np.ones([2, 2], dtype=np.uint8)
     his, bins = plot_his(image)
-    his_exp = np.array([0.25, 0.25, 0.25, 0.25])
+    his_exp = np.array([1])
     assert his.all() == his_exp.all()
 
 
 def test_plot_his2():
     from zl187_image_processing import plot_his
-    image = np.array([1, 2, 3, 4])
+    image = np.ones([2, 2], dtype=np.uint8)
     his, bins = plot_his(image)
-    bins_exp = np.array([1, 2, 3, 4])
+    bins_exp = np.array([1])
     assert bins.all() == bins_exp.all()
 
 
-def test_his_eq():
+def test_plot_his3():
+    from zl187_image_processing import plot_his
+    image = np.ones([2, 2, 3], dtype=np.uint8)
+    his, bins = plot_his(image)
+    his_exp = np.array([[1], [1], [1]])
+    assert np.array(his).all() == his_exp.all()
+
+
+def test_plot_his4():
+    from zl187_image_processing import plot_his
+    image = np.ones([2, 2, 3], dtype=np.uint8)
+    his, bins = plot_his(image)
+    bins_exp = np.array([[1], [1], [1]])
+    assert np.array(bins).all() == bins_exp.all()
+
+
+def test_his_eq1():
     from zl187_image_processing import his_eq
-    image = np.array([1, 2, 3, 4])
+    image = np.ones([2, 2], dtype=np.uint8)
     img_eq, _ = his_eq(image)
-    img_eq_exp = np.array([0.25, 0.5, 0.75, 1])
+    img_eq_exp = np.array([[1, 1],
+                          [1, 1]])
+    assert float(img_eq.all()) == float(img_eq_exp.all())
+
+
+def test_his_eq2():
+    from zl187_image_processing import his_eq
+    image = np.ones([2, 2, 3], dtype=np.uint8)
+    img_eq, _ = his_eq(image)
+    img_eq_exp = np.array([[1, 1, 1],
+                          [1, 1, 1]])
     assert float(img_eq.all()) == float(img_eq_exp.all())
 
 
@@ -64,3 +90,20 @@ def test_get_size2():
     m, n = get_size(image)
     n_exp = 512
     assert float(n) == float(n_exp)
+
+
+def test_check_color_or_gray1():
+    from zl187_image_processing import check_color_or_gray
+    image = ski.data.astronaut()
+    color = check_color_or_gray(image)
+    color_exp = 2
+    assert float(color) == float(color_exp)
+
+
+def test_check_color_or_gray2():
+    from zl187_image_processing import check_color_or_gray
+    image = ski.data.astronaut()
+    img = ski.color.rgb2gray(image)
+    color = check_color_or_gray(img)
+    color_exp = 1
+    assert float(color) == float(color_exp)
