@@ -130,7 +130,7 @@ def get_image_list():
     r = request.get_json()
     username = str(r["username"])
     x = verify_newuser(username)
-    if x is True:
+    if x is False:
         user = User.objects.raw({"_id": username}).first()
         outjson = user.filenames
 
