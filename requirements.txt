@@ -12,4 +12,4 @@ scipy
 sphinx
 pillow
 scikit-image
-
+matplotlib
