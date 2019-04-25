@@ -7,17 +7,16 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
 
-def main():
-    ID = "Reveille"
-    Image_List = []
-    filename = "Neurons"
-    extension = "png"
-    filepathname = r"C:\Users\lenno\OneDrive\Documents\KimAndRev copy.png"
+
+def post_new_user(ID):
     user = {
         "username": ID,
     }
     r3 = requests.post("http://127.0.0.1:5000/api/new_user", json=user)
     print(r3.text)
+
+
+def upload_file(ID, filename, extension, filepathname):
 
     I = read_file_as_b64(filepathname)
     userimage = {
@@ -28,11 +27,23 @@ def main():
     }
     r4 = requests.post("http://127.0.0.1:5000/api/new_image", json=userimage)
     print(r4.text)
+
+
+def get_image_list(username):
+
+    r5 = requests.get('http://127.0.0.1:5000/api/get_name/image_list',
+                      json={"username": username})
+    outfile = r5.json()
+    return outfile
+
+
+def receive_file():
     imjson = {
         "username": ID,
         "filename": filename
     }
-    r5 = requests.get("http://127.0.0.1:5000/api/get_image", json=imjson)
+
+    r6 = requests.get("http://127.0.0.1:5000/api/get_image", json=imjson)
     outfile = r5.json()
     I2_b64 = outfile["Image"]
     # print(I2_b64)
@@ -61,10 +72,4 @@ def save_b64_image(base64_string):
     image_bytes = base64.b64decode(base64_string)
     image_buf = io.BytesIO(image_bytes)
     i = mpimg.imread(image_buf, format='tiff')
-    plt.imshow(i, interpolation='nearest')
-    plt.show()
     return i
-
-
-if __name__ == "__main__":
-    main()

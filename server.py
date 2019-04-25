@@ -7,7 +7,7 @@ import numpy as np
 import datetime
 import math
 from Mongo import User
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import base64
 import io
 from io import BytesIO
@@ -113,8 +113,8 @@ def NewImage():
     else:
         outstr = "User does not exist. Verify username or create new account"
     return outstr
-
-
+  
+  
 def save_image(user, filename, image_tif, process, latency):
     time = datetime.datetime.now()
     Image_Dict = {
@@ -131,6 +131,20 @@ def save_image(user, filename, image_tif, process, latency):
     user.save()
     outstr = "Image saved successfully"
     return outstr
+
+  
+@app.route("/api/get_name/image_list", methods=["GET"])
+def get_image_list():
+    r = request.get_json()
+    username = str(r["username"])
+    x = verify_newuser(username)
+    if x is False:
+        user = User.objects.raw({"_id": username}).first()
+        outjson = user.filenames
+
+    else:
+        outjson = "Image does not exist. Please upload image"
+    return jsonify(outjson)
 
 
 @app.route("/api/get_image", methods=["GET"])
@@ -218,5 +232,11 @@ def get_process():
         outjson = "Invalid data entry"
     return jsonify(outjson)
 
-# @app.route("/api/download_image", methods=["GET"])
-# @app.route("/api/filenames", methods=["GET"])
+
+if __name__ == '__main__':
+    """
+    Execute the server
+    """
+    app.run()
+# @app.route("/api/save_image", methods = ["POST"])
+# @app.route("/api/download_image", methods=["POST"])
