@@ -143,7 +143,7 @@ def get_image_list():
         outjson = user.filenames
 
     else:
-        outjson = "Image does not exist. Please upload image"
+        outjson = ["Image does not exist. Please upload image"]
     return jsonify(outjson)
 
 
