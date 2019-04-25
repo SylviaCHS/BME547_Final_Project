@@ -102,7 +102,7 @@ def NewImage():
     if y is False:
         x = verify_newimage(filename, username)
 
-        if x is True:           
+        if x is True:
             user = User.objects.raw({"_id": username}).first()
 
             image = save_b64_image(rawimage, extension)
@@ -184,7 +184,7 @@ def process_image(iraw, process):  # Test me!
 @app.route("/api/process_image", methods=["POST"])
 def get_process():
     r = request.get_json()
-    t1= datetime.datetime.now()
+    t1 = datetime.datetime.now()
     filename = str(r["filename"])
     username = str(r["username"])
     process = str(r["process"])
@@ -208,11 +208,11 @@ def get_process():
         outjson = {"File": newfilename,
                    "Image": Ib64,
                    "Process": process,
-                  }
+                   }
 
     else:
         outjson = "Invalid data entry"
     return jsonify(outjson)
-    
+
 # @app.route("/api/download_image", methods=["GET"])
 # @app.route("/api/filenames", methods=["GET"])

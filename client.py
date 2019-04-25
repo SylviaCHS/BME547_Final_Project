@@ -36,18 +36,19 @@ def main():
     # outfile = r5.json()
     # I2_b64 = outfile["Image"]
     # print(I2_b64)
-    #save_b64_image(I2_b64)
-    processjson = {
+    # save_b64_image(I2_b64)
+    pjson = {
                     "username": ID,
                     "filename": filename,
-                    "process": "his_eq"
+                    "process": "rev"
                    }
-    r6 = requests.post("http://127.0.0.1:5000/api/process_image", json=processjson)
+    r6 = requests.post("http://127.0.0.1:5000/api/process_image", json=pjson)
     outfile = r6.json()
     # print(outfile)
     I2_b64 = outfile["Image"]
-   # print(I2_b64)
+    # print(I2_b64)
     save_b64_image(I2_b64)
+
 
 def read_file_as_b64(image_path):
     with open(image_path, "rb") as image_file:
