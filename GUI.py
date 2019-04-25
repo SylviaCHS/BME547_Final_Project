@@ -71,9 +71,9 @@ class GUI:
         scroll.grid(column=0, row=6, sticky=(W, E, S))
         self.name_list['xscrollcommand'] = scroll.set
 
-        # Display original image (Need calling function)
-        image_obj = Image.open('IMG63.jpeg')
-        self.image = ImageTk.PhotoImage(image_obj.resize((96, 128)))
+        # Display original image
+        self.image_obj = Image.new('RGB', (96, 128))
+        self.image = ImageTk.PhotoImage(self.image_obj.resize((96, 128)))
         img_label = Label(root, image=self.image)
         img_label.grid(column=1, row=6, columnspan=1)
 
@@ -116,11 +116,11 @@ class GUI:
         from tkinter import filedialog
         self.filepath = filedialog.askopenfilenames(
             initialdir="/", title="Select file",
-            filetypes=(("all files", "*.*"),
+            filetypes=(("PNG files", "*.png"),
                        ("JPEG files", "*.jpeg"),
-                       ("PNG files", "*.png"),
                        ("TIFF files", "*.tiff"),
-                       ("ZIP files", "*.zip")))
+                       ("ZIP files", "*.zip"),
+                       ("all files", "*.*")))
 
     def run_function(self):
         ID = self.user_name.get()
@@ -140,8 +140,12 @@ class GUI:
 
     def download_function(self):
         index = self.name_list.curselection()
-        select_files = self.image_names[index[0]]
-        print(select_files)
+        select_files = [self.image_names[i] for i in index]
+        print(select_files, type(select_files))
+        filename = select_files[0]
+        img = client.get_image(self.user_name.get(), filename)
+        self.image_obj = img
+
 
 
 if __name__ == '__main__':
