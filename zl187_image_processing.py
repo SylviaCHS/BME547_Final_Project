@@ -45,6 +45,7 @@ def his_eq(image):
             img_eq2 = ski.exposure.equalize_hist(image[:, :, 1])
             img_eq3 = ski.exposure.equalize_hist(image[:, :, 2])
             img_eq = np.dstack((img_eq1, img_eq2, img_eq3))
+            img_eq = img_eq1.astype(float)
             end = timeit.default_timer()
             time_process = str(end-start)
     else:

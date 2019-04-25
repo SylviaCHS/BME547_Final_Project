@@ -13,9 +13,9 @@ def main():
     filename = "Neurons"
     extension = "png"
     filepathname = r"C:\Users\lenno\OneDrive\Documents\Picture1_lores.png"
-    user = {
-        "username": ID,
-    }
+    # user = {
+    #     "username": ID,
+    # }
     # r3 = requests.post("http://127.0.0.1:5000/api/new_user", json=user)
     # print(r3.text)
     #
@@ -40,7 +40,7 @@ def main():
     pjson = {
                     "username": ID,
                     "filename": filename,
-                    "process": "rev"
+                    "process": "his_eq"
                    }
     r6 = requests.post("http://127.0.0.1:5000/api/process_image", json=pjson)
     outfile = r6.json()

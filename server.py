@@ -37,7 +37,7 @@ def bytes_to_plot(bytes, extension):  # Test me!
 
 
 def plot_to_bytes(plot):
-    img = Image.fromarray(plot, "RGB")
+    img = Image.fromarray(plot)
     f = BytesIO()
     img.save(f, format='TIFF')
     data = f.getvalue()
@@ -105,7 +105,7 @@ def NewImage():
         if x is True:
             user = User.objects.raw({"_id": username}).first()
 
-            image = save_b64_image(rawimage, extension)
+            image = save_b64_image(rawimage)
             image_tif = convert_to_tif(image)
             outstr = save_image(user, filename, image_tif, "None", "None")
         else:
@@ -196,12 +196,12 @@ def get_process():
         I = find_image(filename, username)
         Iraw = I["Image"]
         Imat = bytes_to_plot(Iraw, "tiff")
-        I_process = process_image(Imat, process)
+        [I_process, latency] = process_image(Imat, process)
         plt.imshow(I_process, interpolation="nearest")
         plt.show()
         I_process_bytes = plot_to_bytes(I_process)
         t2 = datetime.datetime.now()
-        I_save = save_image(user, newfilename, I_process_bytes, t2, "None")
+        I_save = save_image(user, newfilename, I_process_bytes, t2, latency)
         Ib64 = read_data_as_b64(I_process_bytes)
         Imagetest = save_b64_image(Ib64)
         image_buf = io.BytesIO(Imagetest)
