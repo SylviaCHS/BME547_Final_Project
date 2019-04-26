@@ -137,7 +137,6 @@ class GUI:
         # Request to process image
         client.process_image(ID, self.filename, self.method)
 
-
     def load_function(self):
         self.image_names = client.get_image_list(self.user_name.get())
         print(self.image_names)
@@ -169,7 +168,6 @@ def get_file_name(filepath):
     """
     filename, extension = os.path.splitext(filepath[0].split('/')[-1])
     return filename, extension
-
 
 
 if __name__ == '__main__':
