@@ -71,20 +71,22 @@ class GUI:
         scroll.grid(column=0, row=6, sticky=(W, E, S))
         self.name_list['xscrollcommand'] = scroll.set
 
-        # Display original image (Need calling function)
-        image_obj = Image.open('IMG63.jpeg')
-        self.image = ImageTk.PhotoImage(image_obj.resize((96, 128)))
-        img_label = Label(root, image=self.image)
-        img_label.grid(column=1, row=6, columnspan=1)
-
-        # Display processed image (Need calling function)
-        img_fil_label = Label(root, image=self.image)
-        img_fil_label.grid(column=3, row=6, columnspan=1)
+        # Display original image
+        image = ImageTk.PhotoImage(Image.new('RGB', (96, 128)))
+        self.raw_img_label = Label(root, image=image)
+        self.raw_img_label.grid(column=1, row=6, columnspan=1)
 
         # Display histogram
+        pro_hist_label = Label(root, image=image)
+        pro_hist_label.grid(column=4, row=6, columnspan=1)
 
-        hist_label = Label(root, image=self.image)
-        hist_label.grid(column=4, row=6, columnspan=1)
+        # Display processed image (Need calling function)
+        pro_img_label = Label(root, image=image)
+        pro_img_label.grid(column=3, row=6, columnspan=1)
+
+        # Display histogram
+        pro_hist_label = Label(root, image=image)
+        pro_hist_label.grid(column=4, row=6, columnspan=1)
 
         # Display timestamp when uploaded
         timestamp_label = ttk.Label(root, text="Timestamp when uploaded:")
@@ -116,11 +118,11 @@ class GUI:
         from tkinter import filedialog
         self.filepath = filedialog.askopenfilenames(
             initialdir="/", title="Select file",
-            filetypes=(("all files", "*.*"),
+            filetypes=(("PNG files", "*.png"),
                        ("JPEG files", "*.jpeg"),
-                       ("PNG files", "*.png"),
                        ("TIFF files", "*.tiff"),
-                       ("ZIP files", "*.zip")))
+                       ("ZIP files", "*.zip"),
+                       ("all files", "*.*")))
 
     def run_function(self):
         ID = self.user_name.get()
@@ -140,8 +142,13 @@ class GUI:
 
     def download_function(self):
         index = self.name_list.curselection()
-        select_files = self.image_names[index[0]]
-        print(select_files)
+        select_files = [self.image_names[i] for i in index]
+        print(select_files, type(select_files))
+        filename = select_files[0]  # Temporary
+        img_arr = client.get_image(self.user_name.get(), filename)
+        img = ImageTk.PhotoImage(Image.fromarray(img_arr).resize([100, 100]))
+        self.raw_img_label.configure(image=img)
+        self.raw_img_label.image = img
 
 
 if __name__ == '__main__':
