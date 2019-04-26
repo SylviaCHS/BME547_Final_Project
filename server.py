@@ -184,13 +184,13 @@ def find_image(filename, username):
 
 def process_image(iraw, process):  # Test me!
     i_process = 0
-    if process == "his_eq":
+    if process == "Histogram Equalization":
         i_process = Process.his_eq(iraw)
-    elif process == "con_str":
+    elif process == "Contrast Stretching":
         i_process = Process.con_str(iraw)
-    elif process == "log_com":
+    elif process == "Log Compression":
         i_process = Process.log_com(iraw)
-    elif process == "rev":
+    elif process == "Reverse Video":
         i_process = Process.rev(iraw)
     return i_process
 
