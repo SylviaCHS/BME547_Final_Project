@@ -49,12 +49,12 @@ def get_image(ID, filename):
     return img
 
 
-def process_image():
+def process_image(ID, filename, method):
     pjson = {
-                    "username": ID,
-                    "filename": filename,
-                    "process": "log_com"
-                   }
+        "username": ID,
+        "filename": filename,
+        "process": method
+    }
     r6 = requests.post("http://127.0.0.1:5000/api/process_image", json=pjson)
     outfile = r6.json()
     # print(outfile)

@@ -127,12 +127,16 @@ class GUI:
     def run_function(self):
         ID = self.user_name.get()
         new = self.new_factor.get()
+
+        # Upload new image
         if new == '1':
             client.post_new_user(ID)
-            print('new user')
         self.filename, self.extension = get_file_name(self.filepath)
-        print(self.filename, self.extension, self.filepath)
         client.upload_file(ID, self.filename, self.extension, self.filepath[0])
+
+        # Request to process image
+        client.process_image(ID, self.filename, self.method)
+
 
     def load_function(self):
         self.image_names = client.get_image_list(self.user_name.get())
@@ -156,7 +160,7 @@ def get_file_name(filepath):
     Extract filename and extension from filepath
 
     Args:
-        filepath (str):  filepath of the image
+        filepath (StrVar):  filepath of the image
 
     Returns:
         filename (str): filename without path and extension
