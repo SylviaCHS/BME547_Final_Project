@@ -130,8 +130,8 @@ class GUI:
         if new == '1':
             client.post_new_user(ID)
             print('new user')
-        self.filename = self.filepath[0].split('/')[-1]
-        self.extension = os.path.splitext(self.filepath[0])[1]
+        self.filename, self.extension = get_file_name(self.filepath)
+        print(self.filename, self.extension, self.filepath)
         client.upload_file(ID, self.filename, self.extension, self.filepath[0])
 
     def load_function(self):
@@ -149,6 +149,23 @@ class GUI:
         img = ImageTk.PhotoImage(Image.fromarray(img_arr).resize([100, 100]))
         self.raw_img_label.configure(image=img)
         self.raw_img_label.image = img
+
+
+def get_file_name(filepath):
+    """
+    Extract filename and extension from filepath
+
+    Args:
+        filepath (str):  filepath of the image
+
+    Returns:
+        filename (str): filename without path and extension
+        extension (str): image type
+
+    """
+    filename, extension = os.path.splitext(filepath[0].split('/')[-1])
+    return filename, extension
+
 
 
 if __name__ == '__main__':
