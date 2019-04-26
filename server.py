@@ -124,10 +124,12 @@ def save_image(user, filename, image_tif, process, latency):
                     "Timestamp": time,
                     "Latency": latency
                  }
+    print('communicating w/ mongo')
     Image_List = user.ImageFile
     Image_List.append(Image_Dict)
     filenames = user.filenames
     filenames.append(filename)
+    print('saving to mongo')
     user.save()
     outstr = "Image saved successfully"
     return outstr
@@ -137,7 +139,6 @@ def save_image(user, filename, image_tif, process, latency):
 def get_image_list():
     r = request.get_json()
     username = str(r["username"])
-    print('server:', username)
     x = verify_newuser(username)
     if x is False:
         user = User.objects.raw({"_id": username}).first()
@@ -221,6 +222,7 @@ def get_process():
         # plt.show()
         t2 = datetime.datetime.now()
         save_image(user, newfilename, I_process_bytes, t2, latency)
+        user.filenames.append(newfilename)
         outjson = "Image is processed successfully"
     else:
         outjson = "Invalid data entry"

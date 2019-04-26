@@ -135,7 +135,7 @@ class GUI:
         client.upload_file(ID, self.filename, self.extension, self.filepath[0])
 
         # Request to process image
-        client.process_image(ID, self.filename, self.method.get())
+        #client.process_image(ID, self.filename, self.method.get())
 
     def load_function(self):
         print(self.user_name.get())
