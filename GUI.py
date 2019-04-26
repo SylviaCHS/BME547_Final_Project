@@ -127,14 +127,19 @@ class GUI:
     def run_function(self):
         ID = self.user_name.get()
         new = self.new_factor.get()
+
+        # Upload new image
         if new == '1':
             client.post_new_user(ID)
-            print('new user')
-        self.filename = self.filepath[0].split('/')[-1]
-        self.extension = os.path.splitext(self.filepath[0])[1]
+        self.filename, self.extension = get_file_name(self.filepath)
         client.upload_file(ID, self.filename, self.extension, self.filepath[0])
 
+        # Request to process image
+        client.process_image(ID, self.filename, self.method.get())
+
     def load_function(self):
+        print(self.user_name.get())
+
         self.image_names = client.get_image_list(self.user_name.get())
         print(self.image_names)
         for i in self.image_names:
@@ -149,6 +154,22 @@ class GUI:
         img = ImageTk.PhotoImage(Image.fromarray(img_arr).resize([100, 100]))
         self.raw_img_label.configure(image=img)
         self.raw_img_label.image = img
+
+
+def get_file_name(filepath):
+    """
+    Extract filename and extension from filepath
+
+    Args:
+        filepath (StrVar):  filepath of the image
+
+    Returns:
+        filename (str): filename without path and extension
+        extension (str): image type
+
+    """
+    filename, extension = os.path.splitext(filepath[0].split('/')[-1])
+    return filename, extension
 
 
 if __name__ == '__main__':

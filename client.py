@@ -49,18 +49,14 @@ def get_image(ID, filename):
     return img
 
 
-def process_image():
+def process_image(ID, filename, method):
     pjson = {
-                    "username": ID,
-                    "filename": filename,
-                    "process": "log_com"
-                   }
+        "username": ID,
+        "filename": filename,
+        "process": method
+    }
     r6 = requests.post("http://127.0.0.1:5000/api/process_image", json=pjson)
-    outfile = r6.json()
-    # print(outfile)
-    I2_b64 = outfile["Image"]
-    # print(I2_b64)
-    save_b64_image(I2_b64)
+    print(r6.json())
 
 
 def read_file_as_b64(image_path):
