@@ -167,7 +167,6 @@ def GetImage():
                        "Image": Ib64,
                        "Process": image["Process"],
                        }
-
         else:
             outjson = "Image does not exist. Please upload image"
     else:
@@ -207,21 +206,25 @@ def get_process():
     newfilename = filename+"_"+process
     y = verify_newimage(filename, username)
     if y is False:
-        user = User.objects.raw({"_id": username}).first()
-        List = user.ImageFile
-        I = find_image(filename, username)
-        Iraw = I["Image"]
-        Imat = bytes_to_plot(Iraw, "tiff")
-        [I_process, latency] = process_image(Imat, process)
-        # plt.imshow(I_process, interpolation="nearest")
-        # plt.show()
-        I_process_bytes = plot_to_bytes(I_process)
-        # I_test = bytes_to_plot(I_process_bytes, "tiff")
-        # plt.imshow(I_test, interpolation="nearest")
-        # plt.show()
-        t2 = datetime.datetime.now()
-        save_image(user, newfilename, I_process_bytes, t2, latency)
-        outjson = "Image is processed successfully"
+        x = verify_newimage(newfilename, username)
+        if x is True: 
+            user = User.objects.raw({"_id": username}).first()
+            List = user.ImageFile
+            I = find_image(filename, username)
+            Iraw = I["Image"]
+            Imat = bytes_to_plot(Iraw, "tiff")
+            [I_process, latency] = process_image(Imat, process)
+            # plt.imshow(I_process, interpolation="nearest")
+            # plt.show()
+            I_process_bytes = plot_to_bytes(I_process)
+            # I_test = bytes_to_plot(I_process_bytes, "tiff")
+            # plt.imshow(I_test, interpolation="nearest")
+            # plt.show()
+            t2 = datetime.datetime.now()
+            save_image(user, newfilename, I_process_bytes, t2, latency)
+            outjson = "Image is processed successfully"
+        else:
+            outjson = "Image is processed successfully"
     else:
         outjson = "Invalid data entry"
     return jsonify(outjson)
