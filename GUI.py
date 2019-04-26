@@ -72,19 +72,21 @@ class GUI:
         self.name_list['xscrollcommand'] = scroll.set
 
         # Display original image
-        self.image_obj = Image.new('RGB', (96, 128))
-        self.image = ImageTk.PhotoImage(self.image_obj.resize((96, 128)))
-        img_label = Label(root, image=self.image)
-        img_label.grid(column=1, row=6, columnspan=1)
-
-        # Display processed image (Need calling function)
-        img_fil_label = Label(root, image=self.image)
-        img_fil_label.grid(column=3, row=6, columnspan=1)
+        image = ImageTk.PhotoImage(Image.new('RGB', (96, 128)))
+        self.raw_img_label = Label(root, image=image)
+        self.raw_img_label.grid(column=1, row=6, columnspan=1)
 
         # Display histogram
+        pro_hist_label = Label(root, image=image)
+        pro_hist_label.grid(column=4, row=6, columnspan=1)
 
-        hist_label = Label(root, image=self.image)
-        hist_label.grid(column=4, row=6, columnspan=1)
+        # Display processed image (Need calling function)
+        pro_img_label = Label(root, image=image)
+        pro_img_label.grid(column=3, row=6, columnspan=1)
+
+        # Display histogram
+        pro_hist_label = Label(root, image=image)
+        pro_hist_label.grid(column=4, row=6, columnspan=1)
 
         # Display timestamp when uploaded
         timestamp_label = ttk.Label(root, text="Timestamp when uploaded:")
@@ -142,10 +144,11 @@ class GUI:
         index = self.name_list.curselection()
         select_files = [self.image_names[i] for i in index]
         print(select_files, type(select_files))
-        filename = select_files[0]
-        img = client.get_image(self.user_name.get(), filename)
-        self.image_obj = img
-
+        filename = select_files[0]  # Temporary
+        img_arr = client.get_image(self.user_name.get(), filename)
+        img = ImageTk.PhotoImage(Image.fromarray(img_arr).resize([100, 100]))
+        self.raw_img_label.configure(image=img)
+        self.raw_img_label.image = img
 
 
 if __name__ == '__main__':
