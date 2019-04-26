@@ -135,9 +135,11 @@ class GUI:
         client.upload_file(ID, self.filename, self.extension, self.filepath[0])
 
         # Request to process image
-        client.process_image(ID, self.filename, self.method)
+        client.process_image(ID, self.filename, self.method.get())
 
     def load_function(self):
+        print(self.user_name.get())
+
         self.image_names = client.get_image_list(self.user_name.get())
         print(self.image_names)
         for i in self.image_names:

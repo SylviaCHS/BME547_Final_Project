@@ -137,10 +137,12 @@ def save_image(user, filename, image_tif, process, latency):
 def get_image_list():
     r = request.get_json()
     username = str(r["username"])
+    print('server:', username)
     x = verify_newuser(username)
     if x is False:
         user = User.objects.raw({"_id": username}).first()
         outjson = user.filenames
+        print('server: it is new user')
 
     else:
         outjson = ["Image does not exist. Please upload image"]
@@ -218,16 +220,8 @@ def get_process():
         # plt.imshow(I_test, interpolation="nearest")
         # plt.show()
         t2 = datetime.datetime.now()
-        I_save = save_image(user, newfilename, I_process_bytes, t2, latency)
-        Ib64 = read_data_as_b64(I_process_bytes)
-        Imagetest = save_b64_image(Ib64)
-
-        image_buf = io.BytesIO(Imagetest)
-        outjson = {"File": newfilename,
-                   "Image": Ib64,
-                   "Process": process,
-                   }
-
+        save_image(user, newfilename, I_process_bytes, t2, latency)
+        outjson = "Image is processed successfully"
     else:
         outjson = "Invalid data entry"
     return jsonify(outjson)
