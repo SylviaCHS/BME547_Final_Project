@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from PIL import ImageTk, Image
+from tkinter import messagebox
 import os
 import client
 
@@ -113,6 +114,13 @@ class GUI:
         download_btn = ttk.Button(root, text='Download File(s)',
                                   command=lambda: self.download_function())
         download_btn.grid(column=4, row=8)
+
+        def display_metrics():
+            messagebox.showinfo("Metrics", "Hello World")
+        # pop-up window to display metrics
+        metrics_btn = ttk.Button(root, text="Display Metrics",
+                                 command=display_metrics)
+        metrics_btn.grid(column=4, row=9)
 
     def import_file(self):
         """
