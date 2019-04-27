@@ -4,6 +4,7 @@ from PIL import ImageTk, Image
 from tkinter import messagebox
 import os
 import client
+from tkinter import filedialog
 
 
 class GUI:
@@ -209,9 +210,10 @@ class GUI:
         self.pro_img_label.configure(image=pro_img)
         self.pro_img_label.image = pro_img
 
-        # save image
-        # im = Image.open("image_path")
-        # im.convert('RGB').save("image_name.jpg", "JPEG")
+        # Save file to a designated folder
+        savepath = filedialog.askdirectory()
+        full_name = savepath + '/' + filename + '.' + self.saveas.get()
+        save_single_image(pro_img_arr, full_name)
 
 
 def get_image_pair(filename, ID):
@@ -246,6 +248,18 @@ def get_file_name(filepath):  # need pytest
     """
     filename, extension = os.path.splitext(filepath[0].split('/')[-1])
     return filename, extension
+
+
+def save_single_image(img, name):
+    """
+    Save the resulted image to a local directory
+    Args:
+        img:
+        name (str): Desired output image type
+    """
+
+    im = Image.fromarray(img)
+    im.save(name)
 
 
 if __name__ == '__main__':
