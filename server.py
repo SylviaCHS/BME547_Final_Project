@@ -262,7 +262,7 @@ def get_process():
     y = verify_newimage(filename, username)
     if y is False:
         x = verify_newimage(newfilename, username)
-        if x is True: 
+        if x is True:
             user = User.objects.raw({"_id": username}).first()
             List = user.ImageFile
             I = find_image(filename, username)
@@ -291,10 +291,38 @@ def get_process():
     return jsonify(outjson)
 
 
+@app.route("/api/user_metrics/<username>", methods=["GET"])
+def user_metrics():
+    r = request.get_json()
+    username = r["username"]
+    x = verify_newuser(username)
+    if x is False:
+        outjson = get_metrics(username)
+    else:
+        outjson = "User does not exist"
+
+
+def get_metrics(username):
+    user = User.objects.raw({"_id": username}).first()
+    Image_List = user.ImageFile
+    his_eq_mat = find_images("his_eq", Image_List)
+
+
+def find_images(instr, List):
+    count = 0
+    for i in List:
+        if List["process"] == instr:
+            latmat = List["latency"]
+            count = count+1
+    latarr = np.ndarray(latmat)
+
+    outdict = {"Count": count, }
+
+    return outdict
+
+
 if __name__ == '__main__':
     """
     Execute the server
     """
     app.run()
-# @app.route("/api/save_image", methods = ["POST"])
-# @app.route("/api/download_image", methods=["POST"])
