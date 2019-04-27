@@ -326,7 +326,7 @@ def find_stats(instr, List):
             count = count+1
     latarr = np.ndarray(latmat)
     latmean = np.mean(latmat)
-    outdict = {"Count": count, 
+    outdict = {"Count": count,
                "Latency": latmean
                }
 
