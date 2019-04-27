@@ -72,6 +72,7 @@ def verify_newuser(ID):
     Checks existence of username
     """
     users = User.objects.raw({})
+
     x = True
     for u in users:
         if ID == str(u.UserID):
@@ -142,7 +143,6 @@ def NewImage():
             s = [m, n]
             outstr = save_image(user, filename, image_tif, "None", "None",
                                 s, histogram, bins)
-            print(type(histogram))
             # Store in database that it is the original image user sent in
             user.raw_image.append(bool(1))
             user.save()
@@ -204,8 +204,9 @@ def get_process_image_list(username):
     user = User.objects.raw({"_id": username}).first()
     pro_filenames = []
     idx = user.raw_image.index(False)
+    print(user.raw_image)
     pro_filenames.append(user.filenames[idx])
-    print(type(pro_filenames))
+    print(pro_filenames)
     return pro_filenames
 
 
@@ -219,10 +220,9 @@ def GetImage():
     filename = str(r["filename"])
 
     x = verify_newuser(username)
-    print(x)
+
     if x is False:
         y = verify_newimage(filename, username)
-        print(y)
         if y is False:
             user = User.objects.raw({"_id": username}).first()
             image = find_image(filename, username)

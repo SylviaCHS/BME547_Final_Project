@@ -46,9 +46,9 @@ def get_image(ID, filename):
     outfile = r6.json()
     print(type(outfile))
     print(outfile)
-    #I2_b64 = outfile["Image"]
-    #img = save_b64_image(I2_b64)
-    #method = outfile["Process"]
+    I2_b64 = outfile["Image"]
+    img = save_b64_image(I2_b64)
+    method = outfile["Process"]
     return img, method
 
 
