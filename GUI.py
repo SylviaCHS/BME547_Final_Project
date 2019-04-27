@@ -198,6 +198,10 @@ class GUI:
         self.pro_img_label.configure(image=pro_img)
         self.pro_img_label.image = pro_img
 
+        # save image
+        # im = Image.open("image_path")
+        # im.convert('RGB').save("image_name.jpg", "JPEG")
+
 
 def get_image_pair(filename, ID):
     """

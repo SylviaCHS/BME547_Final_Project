@@ -142,6 +142,7 @@ def NewImage():
             s = [m, n]
             outstr = save_image(user, filename, image_tif, "None", "None",
                                 s, histogram, bins)
+            print(type(histogram))
             # Store in database that it is the original image user sent in
             user.raw_image.append(bool(1))
             user.save()
@@ -218,8 +219,10 @@ def GetImage():
     filename = str(r["filename"])
 
     x = verify_newuser(username)
+    print(x)
     if x is False:
         y = verify_newimage(filename, username)
+        print(y)
         if y is False:
             user = User.objects.raw({"_id": username}).first()
             image = find_image(filename, username)

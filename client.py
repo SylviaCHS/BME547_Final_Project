@@ -44,9 +44,11 @@ def get_image(ID, filename):
 
     r6 = requests.get("http://127.0.0.1:5000/api/get_image", json=imjson)
     outfile = r6.json()
-    I2_b64 = outfile["Image"]
-    img = save_b64_image(I2_b64)
-    method = outfile["Process"]
+    print(type(outfile))
+    print(outfile)
+    #I2_b64 = outfile["Image"]
+    #img = save_b64_image(I2_b64)
+    #method = outfile["Process"]
     return img, method
 
 
