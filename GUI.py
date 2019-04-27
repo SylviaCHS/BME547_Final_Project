@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from PIL import ImageTk, Image
+from tkinter import messagebox
 import os
 import client
 
@@ -114,7 +115,19 @@ class GUI:
                                   command=lambda: self.download_function())
         download_btn.grid(column=4, row=8)
 
+        def display_metrics():
+            messagebox.showinfo("Metrics", "Hello World")
+        # pop-up window to display metrics
+        metrics_btn = ttk.Button(root, text="Display Metrics",
+                                 command=display_metrics)
+        metrics_btn.grid(column=4, row=9)
+
     def import_file(self):
+        """
+        Open a pop-up window to let user choose file(s)
+        The full filepath will be stored in the class
+
+        """
         from tkinter import filedialog
         self.filepath = filedialog.askopenfilenames(
             initialdir="/", title="Select file",
@@ -125,6 +138,14 @@ class GUI:
                        ("all files", "*.*")))
 
     def run_function(self):
+        """
+        Control the 'run analysis' button to do the following commands:
+            - Check if user is new. If yes, creat new user in mongoDB
+            - Upload file(s) as images to mongoDB
+            - Process the images using the specified
+              method and store in mongoDB
+
+        """
         ID = self.user_name.get()
         new = self.new_factor.get()
 
@@ -138,14 +159,28 @@ class GUI:
         client.process_image(ID, self.filename, self.method.get())
 
     def load_function(self):
-        print(self.user_name.get())
+        """
+        Control the load button
+        Load a list of processed images in the database. User could choose one
+        or more images to download. If only one image is chosen the resulted
+        plot will be displayed in the GUI. If multiple file is chosen, the
+        files will be zip to a zip archive and save to a designated path.
 
+        Returns:
+
+        """
         self.image_names = client.get_image_list(self.user_name.get())
         print(self.image_names)
         for i in self.image_names:
             self.name_list.insert(END, i)
 
     def download_function(self):
+        """
+        Control the download button
+
+        Returns:
+
+        """
         index = self.name_list.curselection()
         select_files = [self.image_names[i] for i in index]
         print(select_files, type(select_files))
