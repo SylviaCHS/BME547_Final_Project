@@ -5,6 +5,15 @@ import timeit
 
 
 def plot_his(image):
+    """Plot histogram for an input image
+
+    Args:
+        image: input image data (should be ndarray)
+
+    returns:
+        his: normalized histogram value
+        bins: graylevel scale values
+    """
     color = check_color_or_gray(image)
     if color != 0:
         if color == 1:
@@ -32,6 +41,15 @@ def plot_his(image):
 
 
 def his_eq(image):
+    """Doing histogram equalization and count the time for processing
+
+    Args:
+        image: input image data (should be ndarray)
+
+    returns:
+        img_eq: image after histogram equalization
+        time_process: time for doing the processing
+    """
     from skimage import img_as_ubyte
     color = check_color_or_gray(image)
     if color != 0:
@@ -58,6 +76,15 @@ def his_eq(image):
 
 
 def con_str(image):
+    """Doing contrast stretch and count the time for processing
+
+    Args:
+        image: input image data (should be ndarray)
+
+    returns:
+        img_str: image after contrast stretch
+        time_process: time for doing the processing
+    """
     start = timeit.default_timer()
     img_str = ski.exposure.rescale_intensity(image)
     end = timeit.default_timer()
@@ -66,6 +93,15 @@ def con_str(image):
 
 
 def log_com(image):
+    """Doing log compression and count the time for processing
+
+    Args:
+        image: input image data (should be ndarray)
+
+    returns:
+        img_str: image after log compression
+        time_process: time for doing the processing
+    """
     start = timeit.default_timer()
     img_log = ski.exposure.adjust_log(image)
     end = timeit.default_timer()
@@ -74,6 +110,15 @@ def log_com(image):
 
 
 def rev(image):
+    """Doing reverse video and count the time for processing
+
+    Args:
+        image: input image data (should be ndarray)
+
+    returns:
+        img_rev: image after reverse video
+        time_process: time for doing the processing
+    """
     start = timeit.default_timer()
     img_rev = ski.util.invert(image)
     end = timeit.default_timer()
@@ -82,12 +127,30 @@ def rev(image):
 
 
 def get_size(image):
+    """Get the size of the image
+
+    Args:
+        image: input image data (should be ndarray)
+
+    returns:
+        m: number of the rows of the image data
+        n: number of the columns of the image data
+    """
     img = ski.color.rgb2gray(image)
     m, n = np.shape(img)
     return m, n
 
 
 def check_color_or_gray(image):
+    """Check the image is in color or grayscale
+
+    Args:
+        image: input image data (should be ndarray)
+
+    returns:
+        color: a number that indicates whether the image is in color
+               or grayscale
+    """
     color = 0
     siz = np.shape(image)
     dim = len(siz)
