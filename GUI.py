@@ -215,10 +215,8 @@ def get_image_pair(filename, ID):
         raw_img (nparray): original image
 
     """
-    print(type(ID))
     pro_img, method = client.get_image(ID, filename)
     raw_img_name = filename.replace('_' + method, "")
-    print(filename, raw_img_name)
     raw_img, _ = client.get_image(ID, raw_img_name)
     return pro_img, raw_img
 
