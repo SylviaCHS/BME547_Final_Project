@@ -73,19 +73,27 @@ class GUI:
         self.name_list['xscrollcommand'] = scroll.set
 
         # Display original image
+        raw_label = ttk.Label(root, text="Original Image")
+        raw_label.grid(column=1, row=5, columnspan=1)
         image = ImageTk.PhotoImage(Image.new('RGB', (96, 128)))
         self.raw_img_label = Label(root, image=image)
         self.raw_img_label.grid(column=1, row=6, columnspan=1)
 
-        # Display histogram
-        self.pro_hist_label = Label(root, image=image)
-        self.pro_hist_label.grid(column=4, row=6, columnspan=1)
+        # Display original histogram
+        rhist_label = ttk.Label(root, text="Original Histogram")
+        rhist_label.grid(column=2, row=5, columnspan=1)
+        self.raw_hist_label = Label(root, image=image)
+        self.raw_hist_label.grid(column=2, row=6, columnspan=1)
 
         # Display processed image (Need calling function)
+        pro_label = ttk.Label(root, text="Processed Image")
+        pro_label.grid(column=3, row=5, columnspan=1)
         self.pro_img_label = Label(root, image=image)
         self.pro_img_label.grid(column=3, row=6, columnspan=1)
 
         # Display histogram
+        phist_label = ttk.Label(root, text="Processed Histogram")
+        phist_label.grid(column=4, row=5, columnspan=1)
         self.pro_hist_label = Label(root, image=image)
         self.pro_hist_label.grid(column=4, row=6, columnspan=1)
 
@@ -170,6 +178,9 @@ class GUI:
 
         """
         self.image_names = client.get_image_list(self.user_name.get())
+        # clear listbox
+        self.name_list.delete(0, END)
+
         for i in self.image_names:
             self.name_list.insert(END, i)
 
