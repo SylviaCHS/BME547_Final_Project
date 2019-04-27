@@ -142,6 +142,9 @@ def NewImage():
             s = [m, n]
             outstr = save_image(user, filename, image_tif, "None", "None",
                                 s, histogram, bins)
+            # Store in database that it is the original image user sent in
+            user.raw_image.append(bool(1))
+            user.save()
         else:
             outstr = "Image already exists. Please select another name."
     else:
@@ -176,20 +179,33 @@ def save_image(user, filename, image_tif, process, latency, size, hist, bins):
 @app.route("/api/get_name/image_list", methods=["GET"])
 def get_image_list():
     """
-    Retrieves names of all of users' files
+    A route to GET a list of processed image name from MongoDB
+    Returns:
     """
     r = request.get_json()
     username = str(r["username"])
-    print('server:', username)
     x = verify_newuser(username)
     if x is False:
-        user = User.objects.raw({"_id": username}).first()
-        outjson = user.filenames
-        print('server: it is new user')
+        pro_filenames = get_process_image_list(username)
+        outjson = pro_filenames
 
     else:
         outjson = ["Image does not exist. Please upload image"]
     return jsonify(outjson)
+
+
+def get_process_image_list(username):
+    """
+    Get the list of names of processed image
+
+    Returns:
+    """
+    user = User.objects.raw({"_id": username}).first()
+    idx = user.raw_image.index(False)
+    pro_filenames = user.filenames[idx]
+    if pro_filenames is str:
+        pro_filenames = [pro_filenames]
+    return pro_filenames
 
 
 @app.route("/api/get_image", methods=["GET"])
@@ -283,6 +299,9 @@ def get_process():
             t2 = datetime.datetime.now()
             save_image(user, newfilename, I_process_bytes, t2, latency,
                        s, histogram, bins)
+            user.filenames.append(newfilename)
+            user.raw_image.append(bool(0))
+            user.save()
             outjson = "Image is processed successfully"
         else:
             outjson = "Image is processed successfully"
