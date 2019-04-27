@@ -163,10 +163,10 @@ def get_process_image_list(username):
     Returns:
     """
     user = User.objects.raw({"_id": username}).first()
+    pro_filenames = []
     idx = user.raw_image.index(False)
-    pro_filenames = user.filenames[idx]
-    if pro_filenames is str:
-        pro_filenames = [pro_filenames]
+    pro_filenames.append(user.filenames[idx])
+    print(type(pro_filenames))
     return pro_filenames
 
 

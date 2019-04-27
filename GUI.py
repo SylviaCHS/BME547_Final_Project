@@ -78,16 +78,16 @@ class GUI:
         self.raw_img_label.grid(column=1, row=6, columnspan=1)
 
         # Display histogram
-        pro_hist_label = Label(root, image=image)
-        pro_hist_label.grid(column=4, row=6, columnspan=1)
+        self.pro_hist_label = Label(root, image=image)
+        self.pro_hist_label.grid(column=4, row=6, columnspan=1)
 
         # Display processed image (Need calling function)
-        pro_img_label = Label(root, image=image)
-        pro_img_label.grid(column=3, row=6, columnspan=1)
+        self.pro_img_label = Label(root, image=image)
+        self.pro_img_label.grid(column=3, row=6, columnspan=1)
 
         # Display histogram
-        pro_hist_label = Label(root, image=image)
-        pro_hist_label.grid(column=4, row=6, columnspan=1)
+        self.pro_hist_label = Label(root, image=image)
+        self.pro_hist_label.grid(column=4, row=6, columnspan=1)
 
         # Display timestamp when uploaded
         timestamp_label = ttk.Label(root, text="Timestamp when uploaded:")
@@ -170,7 +170,6 @@ class GUI:
 
         """
         self.image_names = client.get_image_list(self.user_name.get())
-        print(self.image_names)
         for i in self.image_names:
             self.name_list.insert(END, i)
 
@@ -181,17 +180,44 @@ class GUI:
         Returns:
 
         """
+        # Get selected filenames
         index = self.name_list.curselection()
         select_files = [self.image_names[i] for i in index]
-        print(select_files, type(select_files))
         filename = select_files[0]  # Temporary
-        img_arr = client.get_image(self.user_name.get(), filename)
-        img = ImageTk.PhotoImage(Image.fromarray(img_arr).resize([100, 100]))
-        self.raw_img_label.configure(image=img)
-        self.raw_img_label.image = img
+
+        pro_img_arr, raw_img_arr = get_image_pair(filename,
+                                                  self.user_name.get())
+
+        raw_img = ImageTk.PhotoImage(Image.fromarray(raw_img_arr)
+                                     .resize([100, 100]))
+        self.raw_img_label.configure(image=raw_img)
+        self.raw_img_label.image = raw_img
+
+        pro_img = ImageTk.PhotoImage(
+            Image.fromarray(pro_img_arr).resize([100, 100]))
+        self.pro_img_label.configure(image=pro_img)
+        self.pro_img_label.image = pro_img
 
 
-def get_file_name(filepath):
+def get_image_pair(filename, ID):
+    """
+
+    Args:
+        filename (str): filename of processed image
+        ID (str): user name
+
+    Returns:
+        pro_img (nparray): post-processed image
+        raw_img (nparray): original image
+
+    """
+    pro_img, method = client.get_image(filename, ID)
+    raw_img_name = filename.replace('_' + method, "")
+    raw_img, _ = client.get_image(raw_img_name, ID)
+    return pro_img, raw_img
+
+
+def get_file_name(filepath):  # need pytest
     """
     Extract filename and extension from filepath
 
