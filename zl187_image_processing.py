@@ -28,8 +28,9 @@ def plot_his(image):
                                                  normalize=True)
             his3, bins3 = ski.exposure.histogram(image[:, :, 2],
                                                  normalize=True)
-            his = np.array([his1, his2, his3])
-            bins = np.array([bins1, bins2, bins3])
+
+            his = np.array([his1, his2, his3]).tolist()
+            bins = np.array([bins1, bins2, bins3]).tolist()
     else:
         print("The image format is not correct.")
     return his, bins

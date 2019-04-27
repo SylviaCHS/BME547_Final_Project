@@ -6,8 +6,8 @@ import numpy as np
 import datetime
 import math
 app = Flask(__name__)
-connect("mongodb+srv://Kim:Zs14nsnRcSzRJcOF@"
-        "cluster0-cxyhs.mongodb.net/test?retryWrites=true")
+connect("mongodb+srv://Sylvia:Ks0l8NyUGEBzhZ2Y@bme547-zlm8s.mongodb."
+        "net/test?retryWrites=true")
 
 
 class User(MongoModel):

@@ -72,6 +72,7 @@ def verify_newuser(ID):
     Checks existence of username
     """
     users = User.objects.raw({})
+
     x = True
     for u in users:
         if ID == str(u.UserID):
@@ -169,8 +170,7 @@ def save_image(user, filename, image_tif, process, latency, size, hist, bins):
                  }
     Image_List = user.ImageFile
     Image_List.append(Image_Dict)
-    filenames = user.filenames
-    filenames.append(filename)
+    user.filenames.append(filename)
     user.save()
     outstr = "Image saved successfully"
     return outstr
@@ -201,10 +201,10 @@ def get_process_image_list(username):
     Returns:
     """
     user = User.objects.raw({"_id": username}).first()
-    idx = user.raw_image.index(False)
-    pro_filenames = user.filenames[idx]
-    if pro_filenames is str:
-        pro_filenames = [pro_filenames]
+
+    pro_filenames = [user.filenames[i] for i, x in
+                     enumerate(user.raw_image) if x is False]
+    print(user.filenames)
     return pro_filenames
 
 
@@ -218,6 +218,7 @@ def GetImage():
     filename = str(r["filename"])
 
     x = verify_newuser(username)
+
     if x is False:
         y = verify_newimage(filename, username)
         if y is False:
@@ -241,10 +242,8 @@ def find_image(filename, username):
     Queries database for image
     """
     user = User.objects.raw({"_id": username}).first()
-    Image_List = user.ImageFile
-    userfiles = user.filenames
-    idx = userfiles.index(filename)
-    image = Image_List[idx]
+    idx = user.filenames.index(filename)
+    image = user.ImageFile[idx]
     return image
 
 
@@ -299,7 +298,6 @@ def get_process():
             t2 = datetime.datetime.now()
             save_image(user, newfilename, I_process_bytes, t2, latency,
                        s, histogram, bins)
-            user.filenames.append(newfilename)
             user.raw_image.append(bool(0))
             user.save()
             outjson = "Image is processed successfully"
