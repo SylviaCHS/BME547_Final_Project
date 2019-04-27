@@ -305,18 +305,30 @@ def user_metrics():
 def get_metrics(username):
     user = User.objects.raw({"_id": username}).first()
     Image_List = user.ImageFile
-    his_eq_mat = find_images("his_eq", Image_List)
+    his_eq_dict = find_stats("his_eq", Image_List)
+    con_str_dict = find_stats("con_str", Image_List)
+    log_com_dict = find_stats("log_com", Image_List)
+    rev_dict = find_stats("rev", Image_List)
+    outdict = {
+              "Histogram Equalization": his_eq_dict,
+              "Log Compression": log_com_dict,
+              "Contrast Stretching": con_str_dict,
+              "Reverse Image": rev_dict
+              }
+    return outdict
 
 
-def find_images(instr, List):
+def find_stats(instr, List):
     count = 0
     for i in List:
         if List["process"] == instr:
-            latmat = List["latency"]
+            latmat[count] = List["latency"]
             count = count+1
     latarr = np.ndarray(latmat)
-
-    outdict = {"Count": count, }
+    latmean = np.mean(latmat)
+    outdict = {"Count": count, 
+               "Latency": latmean
+               }
 
     return outdict
 
