@@ -19,6 +19,9 @@ app = Flask(__name__)
 
 
 def read_data_as_b64(I_bytes):  # Test me!
+    """
+    Used for converting input data into base64
+    """
     I_buf = io.BytesIO(I_bytes)
     b64_bytes = base64.b64encode(I_bytes)
     b64_string = str(b64_bytes, encoding='utf-8')
@@ -26,17 +29,26 @@ def read_data_as_b64(I_bytes):  # Test me!
 
 
 def save_b64_image(base64_string):  # Test me!
+    """
+    Saves base64 string as bytes
+    """
     image_bytes = base64.b64decode(base64_string)
     return image_bytes
 
 
 def bytes_to_plot(bytes, extension):  # Test me!
+    """
+    Converts raw TIF format in Mongo to numpy array
+    """
     image_buf = io.BytesIO(bytes)
     i = mpimg.imread(image_buf, format=extension)
     return i
 
 
 def plot_to_bytes(plot):
+    """
+    Converts numpy array into raw TIF format for MongoModel
+    """
     img = Image.fromarray(plot, "RGB")
     f = BytesIO()
     img.save(f, format='TIFF')
@@ -45,6 +57,9 @@ def plot_to_bytes(plot):
 
 
 def convert_to_tif(I):  # Test me!
+    """
+    Converts raw bytes of any format into tiff
+    """
     with BytesIO() as f:
         img = Image.open(io.BytesIO(I)).convert("RGB")
         img.save(f, format='TIFF')
@@ -53,6 +68,9 @@ def convert_to_tif(I):  # Test me!
 
 
 def verify_newuser(ID):
+    """
+    Checks existence of username
+    """
     users = User.objects.raw({})
     x = True
     for u in users:
@@ -62,6 +80,9 @@ def verify_newuser(ID):
 
 
 def verify_newimage(filename, ID):
+    """
+    Checks existence of filename
+    """
     u = User.objects.raw({"_id": ID}).first()
     x = True
     cursor = u.filenames
@@ -77,6 +98,9 @@ def verify_newimage(filename, ID):
 
 @app.route("/api/new_user", methods=["POST"])
 def NewUser():
+    """
+    Post request for new user
+    """
     r = request.get_json()
     username = r["username"]
     ID = str(username)
@@ -92,6 +116,9 @@ def NewUser():
 
 @app.route("/api/new_image", methods=["POST"])
 def NewImage():
+    """
+    Post request for new image
+    """
     r = request.get_json()
     username = str(r["username"])
     filename = str(r["filename"])
@@ -107,7 +134,14 @@ def NewImage():
 
             image = save_b64_image(rawimage)
             image_tif = convert_to_tif(image)
-            outstr = save_image(user, filename, image_tif, "None", "None")
+            A = bytes_to_plot(image_tif, "tiff")
+            [his_raw, bins_raw] = Process.plot_his(A)
+            histogram = his_raw
+            bins = bins_raw
+            [m, n] = Process.get_size(A)
+            s = [m, n]
+            outstr = save_image(user, filename, image_tif, "None", "None",
+                                s, histogram, bins)
         else:
             outstr = "Image already exists. Please select another name."
     else:
@@ -115,14 +149,20 @@ def NewImage():
     return outstr
 
 
-def save_image(user, filename, image_tif, process, latency):
+def save_image(user, filename, image_tif, process, latency, size, hist, bins):
+    """
+    Function that saves image to Mongo (no calls)
+    """
     time = datetime.datetime.now()
     Image_Dict = {
                     "File": filename,
                     "Image": image_tif,
                     "Process": process,
                     "Timestamp": time,
-                    "Latency": latency
+                    "Latency": latency,
+                    "Size": size,
+                    "Histogram": hist,
+                    "Histogram Bins": bins,
                  }
     Image_List = user.ImageFile
     Image_List.append(Image_Dict)
@@ -135,6 +175,9 @@ def save_image(user, filename, image_tif, process, latency):
 
 @app.route("/api/get_name/image_list", methods=["GET"])
 def get_image_list():
+    """
+    Retrieves names of all of users' files
+    """
     r = request.get_json()
     username = str(r["username"])
     print('server:', username)
@@ -151,6 +194,9 @@ def get_image_list():
 
 @app.route("/api/get_image", methods=["GET"])
 def GetImage():
+    """
+    Requests single image from database
+    """
     r = request.get_json()
     username = str(r["username"])
     filename = str(r["filename"])
@@ -175,6 +221,9 @@ def GetImage():
 
 
 def find_image(filename, username):
+    """
+    Queries database for image
+    """
     user = User.objects.raw({"_id": username}).first()
     Image_List = user.ImageFile
     userfiles = user.filenames
@@ -184,6 +233,9 @@ def find_image(filename, username):
 
 
 def process_image(iraw, process):  # Test me!
+    """
+    Processes image as specified by user
+    """
     i_process = 0
     if process == "Histogram Equalization":
         i_process = Process.his_eq(iraw)
@@ -198,6 +250,9 @@ def process_image(iraw, process):  # Test me!
 
 @app.route("/api/process_image", methods=["POST"])
 def get_process():
+    """
+    Processes image and saves to database
+    """
     r = request.get_json()
     t1 = datetime.datetime.now()
     filename = str(r["filename"])
@@ -214,6 +269,11 @@ def get_process():
             Iraw = I["Image"]
             Imat = bytes_to_plot(Iraw, "tiff")
             [I_process, latency] = process_image(Imat, process)
+            [hist_process, bins_process] = Process.plot_his(I_process)
+            histogram = hist_process
+            bins = bins_process
+            [m, n] = Process.get_size(I_process)
+            s = [m, n]
             # plt.imshow(I_process, interpolation="nearest")
             # plt.show()
             I_process_bytes = plot_to_bytes(I_process)
@@ -221,7 +281,8 @@ def get_process():
             # plt.imshow(I_test, interpolation="nearest")
             # plt.show()
             t2 = datetime.datetime.now()
-            save_image(user, newfilename, I_process_bytes, t2, latency)
+            save_image(user, newfilename, I_process_bytes, t2, latency,
+                       s, histogram, bins)
             outjson = "Image is processed successfully"
         else:
             outjson = "Image is processed successfully"

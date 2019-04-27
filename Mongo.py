@@ -19,4 +19,4 @@ class User(MongoModel):
     timestamp = fields.ListField()
     ImageFile = fields.ListField()
     filenames = fields.ListField()
-    raw = fields.BooleanField()
+    raw_image = fields.ListField()
