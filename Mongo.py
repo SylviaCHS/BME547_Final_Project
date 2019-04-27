@@ -12,12 +12,11 @@ connect("mongodb+srv://Kim:Zs14nsnRcSzRJcOF@"
 
 class User(MongoModel):
     """
-    MongoDB user class that stores heart rate,
-    timestamp of all heart rate data, user age
-    patient ID number (Primary key), and
-    attending physician email address.
+    Class that stores UserID, timestamp, and images
+    for multiple users
     """
     UserID = fields.CharField(primary_key=True)
     timestamp = fields.ListField()
     ImageFile = fields.ListField()
     filenames = fields.ListField()
+    raw_image = fields.ListField()
