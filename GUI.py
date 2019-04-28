@@ -29,7 +29,7 @@ class GUI:
         th_check.grid(column=2, row=1)
 
         # Get file path
-        self.filepath = StringVar()
+        # self.filepath = StringVar()
         import_btn = ttk.Button(root, text='Import File(s)',
                                 command=lambda: self.import_file())
         import_btn.grid(column=1, row=2)
@@ -161,11 +161,8 @@ class GUI:
         # Upload new image
         if new == '1':
             client.post_new_user(ID)
-        self.filename, self.extension = get_file_name(self.filepath)
-        client.upload_file(ID, self.filename, self.extension, self.filepath[0])
+        run_analysis(self.filepath, ID, self.method.get())
 
-        # Request to process image
-        client.process_image(ID, self.filename, self.method.get())
 
     def load_function(self):
         """
@@ -239,14 +236,14 @@ def get_file_name(filepath):  # need pytest
     Extract filename and extension from filepath
 
     Args:
-        filepath (StrVar):  filepath of the image
+        filepath (str):  filepath of the image
 
     Returns:
         filename (str): filename without path and extension
         extension (str): image type
 
     """
-    filename, extension = os.path.splitext(filepath[0].split('/')[-1])
+    filename, extension = os.path.splitext(filepath.split('/')[-1])
     return filename, extension
 
 
@@ -260,6 +257,48 @@ def save_single_image(img, name):
 
     im = Image.fromarray(img)
     im.save(name)
+
+
+def check_multi_single(filenames):
+    """
+    Check how many files are chosen
+
+    Args:
+        filenames (tuple: A tuple of all the filepaths
+
+    Returns:
+        single (bool): Return whether it is a single file (True)
+                       or multiple files (False)
+
+    """
+    num = len(filenames)
+    if num == 1:
+        single = bool(1)
+    else:
+        single = bool(0)
+    return single
+
+
+def run_analysis(filepath, ID, method):
+    """
+    Upload image and run the required analysis
+
+    Args:
+        filepath:
+        ID:
+        method:
+
+    Returns:
+
+    """
+    for path in filepath:
+        print(path)
+        filename, extension = get_file_name(path)
+        # Save raw image to database
+        client.upload_file(ID, filename, extension, path)
+
+        # Request to process image
+        client.process_image(ID, filename, method)
 
 
 if __name__ == '__main__':
