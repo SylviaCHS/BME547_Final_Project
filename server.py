@@ -18,7 +18,7 @@ import zl187_image_processing as Process
 app = Flask(__name__)
 
 
-def read_data_as_b64(I_bytes):  # Test me!
+def read_data_as_b64(I_bytes):
     """
     Used for converting input data into base64
     """
@@ -28,7 +28,7 @@ def read_data_as_b64(I_bytes):  # Test me!
     return b64_string
 
 
-def save_b64_image(base64_string):  # Test me!
+def save_b64_image(base64_string):
     """
     Saves base64 string as bytes
     """
@@ -36,7 +36,7 @@ def save_b64_image(base64_string):  # Test me!
     return image_bytes
 
 
-def bytes_to_plot(bytes, extension):  # Test me!
+def bytes_to_plot(bytes, extension):
     """
     Converts raw TIF format in Mongo to numpy array
     """
@@ -56,7 +56,7 @@ def plot_to_bytes(plot):
     return data
 
 
-def convert_file(I, extension):  # Test me!
+def convert_file(I, extension):
     """
     Converts raw bytes of any format into tiff
     """
@@ -362,12 +362,12 @@ def get_metrics(username):
 
 def find_stats(instr, List):
     count = 0
-    latmat = [0]
+    latmat = []
     for i in List:
         if i["Process"] == instr:
-            latmat[count] = float(i["Latency"])
+            latmat.append(float(i["Latency"]))
             count = count+1
-        if latmat == [0]:
+        if latmat == []:
             latmean = "N/A"
         else:
             latarr = np.asarray(latmat)
