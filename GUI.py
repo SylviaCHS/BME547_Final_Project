@@ -271,7 +271,7 @@ def get_image_pair(filename, ID):
     pro_hist.show()
     print(type(client.get_histogram(ID, filename)))
 
-    raw_hist = Image.fromarray(client.get_histogram(ID, filename))
+    raw_hist = Image.fromarray(client.get_histogram(ID, raw_img_name))
 
     return pro_img, raw_img, raw_img_name, pro_hist, raw_hist
 
