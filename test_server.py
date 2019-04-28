@@ -45,8 +45,8 @@ def test_find_stats1():
     data_list.append(data)
     data_list.append(data2)
     data_list.append(data3)
-    [count, latmean] = find_stats("Histogram Equalization", data_list)
-    assert latmean == 0.5
+    A = find_stats("Histogram Equalization", data_list)
+    assert A["Mean latency"] == 0.5
 
 
 def test_find_stats2():
@@ -67,5 +67,5 @@ def test_find_stats2():
     data_list.append(data)
     data_list.append(data2)
     data_list.append(data3)
-    [count, latmean] = find_stats("Histogram Equalization", data_list)
-    assert count == 2
+    A = find_stats("Histogram Equalization", data_list)
+    assert A["Times used"] == 2

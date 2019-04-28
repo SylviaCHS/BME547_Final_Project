@@ -7,6 +7,7 @@ import client
 from tkinter import filedialog
 import zipfile
 import io
+import requests
 
 
 class GUI:
@@ -134,7 +135,8 @@ class GUI:
         metrics_btn.grid(column=4, row=9)
 
         self.msg = StringVar()
-        msg_label = Message(root, textvariable=self.msg, relief=RAISED, width=400)
+        msg_label = Message(root, textvariable=self.msg,
+                            relief=RAISED, width=400)
         msg_label.grid(column=0, row=9, columnspan=4)
 
     def display_metrics(self):
@@ -211,44 +213,46 @@ class GUI:
         # Ask user for directory and user ID
         savepath = filedialog.askdirectory()
         ID = self.user_name.get()
-        self.msg = 'Saving files to the designated folder'
+        self.msg.set('Saving files to the designated folder')
         single = check_multi_single(select_files)
 
         if single is True:
 
             filename = select_files[0]  # Temporary
+            try:
+                pro_img_obj, raw_img_obj, raw_img_name, \
+                    pro_hist_obj, raw_hist_obj = get_image_pair(filename, ID)
+                # Get Image metrics
+                self.raw_metrics = client.image_metrics(ID, raw_img_name)
+                self.pro_metrics = client.image_metrics(ID, filename)
 
-            pro_img_obj, raw_img_obj, raw_img_name, \
-                pro_hist_obj, raw_hist_obj = get_image_pair(filename, ID)
+                s = self.raw_metrics['size']
+                size = image_size(s)
 
-            # Get Image metrics
-            self.raw_metrics = client.image_metrics(ID, raw_img_name)
-            self.pro_metrics = client.image_metrics(ID, filename)
+                # display the raw and process image in GUI
+                raw_img = ImageTk.PhotoImage(raw_img_obj.resize(size))
+                self.raw_img_label.configure(image=raw_img)
+                self.raw_img_label.image = raw_img
 
-            s = self.raw_metrics['size']
-            size = image_size(s)
+                pro_img = ImageTk.PhotoImage(pro_img_obj.resize(size))
+                self.pro_img_label.configure(image=pro_img)
+                self.pro_img_label.image = pro_img
 
-            # display the raw and process image in GUI
-            raw_img = ImageTk.PhotoImage(raw_img_obj.resize(size))
-            self.raw_img_label.configure(image=raw_img)
-            self.raw_img_label.image = raw_img
+                # display raw and process histogram in GUI
+                raw_hist = ImageTk.PhotoImage(raw_hist_obj.resize([385, 450]))
+                self.raw_hist_label.configure(image=raw_hist)
+                self.raw_hist_label.image = raw_hist
 
-            pro_img = ImageTk.PhotoImage(pro_img_obj.resize(size))
-            self.pro_img_label.configure(image=pro_img)
-            self.pro_img_label.image = pro_img
+                pro_hist = ImageTk.PhotoImage(pro_hist_obj.resize([385, 450]))
+                self.pro_hist_label.configure(image=pro_hist)
+                self.pro_hist_label.image = pro_hist
 
-            # # display raw and process histogram in GUI
-            # raw_hist = ImageTk.PhotoImage(raw_hist_obj)
-            # self.raw_hist_label.configure(image=raw_hist)
-            # self.raw_hist_label.image = raw_hist
-            #
-            # pro_hist = ImageTk.PhotoImage(pro_hist_obj)
-            # self.pro_hist_label.configure(image=pro_hist)
-            # self.pro_hist_label.image = pro_hist
-
-            # Save file to a designated folder
-            full_name = savepath + '/' + filename + '.' + self.saveas.get()
-            pro_img_obj.save(full_name)
+                # Save file to a designated folder
+                full_name = savepath + '/' + filename + '.' + self.saveas.get()
+                pro_img_obj.save(full_name)
+            except ValueError:
+                self.msg.set(get_image_pair(filename, ID))
+                pass
         else:
             download_multiple(select_files, savepath, ID, self.saveas.get())
 
@@ -279,19 +283,24 @@ def get_image_pair(filename, ID):
         raw_img_name (str): original image name
 
     """
-    pro_img_arr, method = client.get_image(ID, filename)
-    pro_img = Image.fromarray(pro_img_arr)
+    r = client.get_image_file(ID, filename)
 
-    raw_img_name = filename.replace('_' + method, "")
+    try:
+        pro_img_arr, method = client.get_image(r)
+        pro_img = Image.fromarray(pro_img_arr)
+        raw_img_name = filename.replace('_' + method, "")
 
-    raw_img_arr, _ = client.get_image(ID, raw_img_name)
-    raw_img = Image.fromarray(raw_img_arr)
+        raw_img_arr, _ = client.get_image(ID, raw_img_name)
+        raw_img = Image.fromarray(raw_img_arr)
 
-    pro_hist = Image.fromarray(client.get_histogram(ID, filename))
+        pro_hist = Image.fromarray(client.get_histogram(ID, filename))
 
-    raw_hist = Image.fromarray(client.get_histogram(ID, raw_img_name))
+        raw_hist = Image.fromarray(client.get_histogram(ID, raw_img_name))
+        return pro_img, raw_img, raw_img_name, pro_hist, raw_hist
 
-    return pro_img, raw_img, raw_img_name, pro_hist, raw_hist
+    except TypeError:
+        print(r)
+        return r
 
 
 def get_file_name(filepath):  # need pytest
