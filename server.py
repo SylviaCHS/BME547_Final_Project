@@ -293,8 +293,8 @@ def get_process():
             # plt.imshow(I_test, interpolation="nearest")
             # plt.show()
             t2 = datetime.datetime.now()
-            save_image(user, newfilename, I_process_bytes, t2, latency,
-                       s, histogram, bins)
+            save_image(user, newfilename, I_process_bytes, process, t2,
+                       latency, s, histogram, bins)
             user.raw_image.append(bool(0))
             user.save()
             outjson = "Image is processed successfully"
