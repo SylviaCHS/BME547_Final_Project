@@ -12,7 +12,7 @@ def post_new_user(ID):
         "username": ID,
     }
     r3 = requests.post("http://127.0.0.1:5000/api/new_user", json=user)
-    print(r3.text)
+    return r3.text
 
 
 def upload_file(ID, filename, extension, filepathname):
@@ -25,7 +25,7 @@ def upload_file(ID, filename, extension, filepathname):
         "extension": extension
     }
     r4 = requests.post("http://127.0.0.1:5000/api/new_image", json=userimage)
-    print(r4.text)
+    return r4.text
 
 
 def get_image_list(username):
@@ -57,7 +57,7 @@ def process_image(ID, filename, method):
         "process": method
     }
     r6 = requests.post("http://127.0.0.1:5000/api/process_image", json=pjson)
-    print(r6.json())
+    return r6.json()
 
 
 def user_metrics(ID):

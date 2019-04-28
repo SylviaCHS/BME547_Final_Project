@@ -133,6 +133,10 @@ class GUI:
                                  command=lambda: self.display_metrics())
         metrics_btn.grid(column=4, row=9)
 
+        self.msg = StringVar()
+        msg_label = Message(root, textvariable=var, relief=RAISED)
+        msg_label.grid(column=0, row=9, columnspan=4)
+
     def display_metrics(self):
         metrics = client.user_metrics(self.user_name.get())
         messagebox.showinfo("Metrics", metrics)
@@ -172,8 +176,8 @@ class GUI:
 
         # Upload new image
         if new == '1':
-            client.post_new_user(ID)
-        check_zip_file(self.filepath, ID, self.method.get())
+            self.msg = client.post_new_user(ID)
+        self.msg = check_zip_file(self.filepath, ID, self.method.get())
 
     def load_function(self):
         """
@@ -330,9 +334,10 @@ def check_multi_single(filenames):
 def check_zip_file(filepath, ID, method):
     filename, extension = get_file_name(filepath[0])
     if extension == '.zip':
-        run_zip_analysis(filepath, ID, method)
+        msg = run_zip_analysis(filepath, ID, method)
     else:
         run_analysis(filepath, ID, method)
+    return msg
 
 
 def run_zip_analysis(filepath, ID, method):
@@ -347,10 +352,12 @@ def run_zip_analysis(filepath, ID, method):
                 filename, extension = get_file_name(file.name)
 
                 # Save raw image to database
-                client.upload_file(ID, filename, extension, fh.getvalue())
+                msg = client.upload_file(ID, filename,
+                                         extension, fh.getvalue())
 
                 # Request to process image
-                client.process_image(ID, filename, method)
+                msg = client.process_image(ID, filename, method)
+    return msg1, msg2
 
 
 def run_analysis(filepath, ID, method):
