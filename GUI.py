@@ -163,7 +163,6 @@ class GUI:
             client.post_new_user(ID)
         run_analysis(self.filepath, ID, self.method.get())
 
-
     def load_function(self):
         """
         Control the load button
