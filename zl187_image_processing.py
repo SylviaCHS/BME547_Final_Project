@@ -18,9 +18,6 @@ def plot_his(image):
     if color != 0:
         if color == 1:
             his, bins = ski.exposure.histogram(image, normalize=True)
-            plt.plot(bins, his)
-            plt.show()
-            plt.tight_layout()
         if color == 2:
             his1, bins1 = ski.exposure.histogram(image[:, :, 0],
                                                  normalize=True)
