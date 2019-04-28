@@ -526,7 +526,9 @@ def find_stats(instr, List):
         else:
             latarr = np.asarray(latmat)
             latmean = np.mean(latmat)
-    info = [count, latmean]
+    info = {"Times used": count,
+            "Mean latency": latmean
+            }
     return info
 
 
