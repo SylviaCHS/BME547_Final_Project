@@ -197,13 +197,12 @@ def NewImage():
             image = save_b64_image(rawimage)
             image_tif = convert_file(image, "TIFF")
             A = bytes_to_plot(image_tif, "tiff")
-            [his_raw, bins_raw] = Process.plot_his(A)
-            histogram = his_raw
-            bins = bins_raw
+            [histplot, hist, bins] = Process.plot_his(A)
+            histbytes = plot_to_bytes(histplot)
             [m, n] = Process.get_size(A)
             s = [m, n]
             outstr = save_image(user, filename, image_tif, "None", "None",
-                                s, histogram, bins)
+                                s, histbytes)
             # Store in database that it is the original image user sent in
             user.raw_image.append(bool(1))
             user.save()
@@ -214,7 +213,7 @@ def NewImage():
     return outstr
 
 
-def save_image(user, filename, image_tif, process, latency, size, hist, bins):
+def save_image(user, filename, image_tif, process, latency, size, hist):
     """
     Function that saves image to Mongo database
 
@@ -240,7 +239,6 @@ def save_image(user, filename, image_tif, process, latency, size, hist, bins):
                     "Latency": latency,
                     "Size": size,
                     "Histogram": hist,
-                    "Histogram Bins": bins,
                  }
     Image_List = user.ImageFile
     Image_List.append(Image_Dict)
@@ -397,7 +395,8 @@ def get_process():
             Iraw = I["Image"]
             Imat = bytes_to_plot(Iraw, "tiff")
             [I_process, latency] = process_image(Imat, process)
-            [histogram, bins] = Process.plot_his(I_process)
+            [histplot, hist, bins] = Process.plot_his(I_process)
+            histbytes = plot_to_bytes(histplot)
             [m, n] = Process.get_size(I_process)
             s = [m, n]
             # plt.imshow(I_process, interpolation="nearest")
@@ -407,7 +406,7 @@ def get_process():
             # plt.imshow(I_test, interpolation="nearest")
             # plt.show()
             save_image(user, newfilename, I_process_bytes, process,
-                       latency, s, histogram, bins)
+                       latency, s, histbytes)
             user.raw_image.append(bool(0))
             user.save()
             outjson = "Image is processed successfully"
@@ -562,6 +561,35 @@ def download_image():
     else:
         outstring = "User does not exist"
     return jsonify(outstring)
+
+
+@app.route("/api/get_histogram", methods=["GET"])
+def get_histogram():
+    """
+    Server request for image of histogram
+    Args:
+        Input JSON:
+            Username: username
+            Filename: filename
+    Returns:
+        outstring: base 64 string of histogram image
+    """
+    r = request.get_json()
+    username = r["username"]
+    filename = r["filename"]
+    x = verify_newuser(username)
+    if x is False:
+        y = verify_newimage(filename, username)
+        if y is False:
+            I = find_image(filename, username)
+            file = I["Histogram"]
+            outstring = {"Histogram": read_data_as_b64(file)}
+        else:
+            outstring = "Image does not exist"
+    else:
+        outstring = "User does not exist"
+    return jsonify(outstring)
+
 
 if __name__ == '__main__':
     """

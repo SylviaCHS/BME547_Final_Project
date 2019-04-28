@@ -68,6 +68,19 @@ def user_metrics(ID):
     return r6.json()
 
 
+def get_histogram(ID, filename):
+    djson = {
+        "username": ID,
+        "filename": filename,
+    }
+    r = requests.get("http://127.0.0.1:5000/api/get_histogram", json=djson)
+    print(r.json())
+    outfile = r.json()
+    I2_b64 = outfile["Histogram"]
+    i = save_b64_image(I2_b64)
+    return i
+
+
 def read_file_as_b64(image_path):
     with open(image_path, "rb") as image_file:
         b64_bytes = base64.b64encode(image_file.read())

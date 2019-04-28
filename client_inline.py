@@ -70,13 +70,12 @@ def main():
     djson = {
         "username": ID,
         "filename": newfilename,
-        "extension": "JPEG"
     }
-    r = requests.get("http://127.0.0.1:5000/api/download_image", json=djson)
+    r = requests.get("http://127.0.0.1:5000/api/get_histogram", json=djson)
     print(r.json())
     outfile = r.json()
-    I2_b64 = outfile["Image"]
-    download_b64_image(I2_b64, "Reveille_HistogramEq.jpg")
+    I2_b64 = outfile["Histogram"]
+    save_b64_image(I2_b64)
 
 
 def read_file_as_b64(image_path):
