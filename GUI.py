@@ -262,10 +262,9 @@ def save_single_image(img, name):
     """
     Save the resulted image to a local directory
     Args:
-        img:
-        name (str): Desired output image type
+        img (nparray): Image received from server
+        name (str): full name with filepath (specified by user) and filename
     """
-
     im = Image.fromarray(img)
     im.save(name)
 
@@ -292,19 +291,20 @@ def check_multi_single(filenames):
 
 def run_analysis(filepath, ID, method):
     """
-    Upload image and run the required analysis
+    Upload image(s) and run the required analysis
 
     Args:
-        filepath:
-        ID:
-        method:
+        filepath (str): filepath of the image including filename
+        ID (str): user name
+        method (str): user specified image processing method
 
     Returns:
 
     """
     for path in filepath:
-        print(path)
+
         filename, extension = get_file_name(path)
+
         # Save raw image to database
         client.upload_file(ID, filename, extension, path)
 
@@ -313,9 +313,17 @@ def run_analysis(filepath, ID, method):
 
 
 def download_multiple(select_files, savepath, id, ext):
-    with zipfile.ZipFile(savepath + '/processed_images.zip', mode='w') as zf:
+    """
+    Download multiple processed images in a zip archive.
 
-                         #compression=zipfile.ZIP_DEFLATED,
+    Args:
+        select_files (list): list of names of selected images
+        savepath (str): path of folder user chose
+        id (str): user name
+        ext (str): User specified image type
+
+    """
+    with zipfile.ZipFile(savepath + '/processed_images.zip', mode='w') as zf:
 
         for file in select_files:
             pro_img_arr, _ = get_image_pair(file, id)
