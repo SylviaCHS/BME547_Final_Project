@@ -64,8 +64,17 @@ def user_metrics(ID):
     mjson = {
         "username": ID
     }
-    r6 = requests.get("http://127.0.0.1:5000/api/user_metrics", json=mjson)
-    return r6.json()
+    r7 = requests.get("http://127.0.0.1:5000/api/user_metrics", json=mjson)
+    return r7.json()
+
+
+def image_metrics(ID, filename):
+    mjson = {
+        "username": ID,
+        "filename": filename
+    }
+    r8 = requests.get("http://127.0.0.1:5000/api/image_metrics", json=mjson)
+    return r8.json()
 
 
 def read_file_as_b64(image_path):

@@ -100,17 +100,19 @@ class GUI:
         self.pro_hist_label = Label(root, image=image)
         self.pro_hist_label.grid(column=4, row=6, columnspan=1)
 
-        # Display timestamp when uploaded
-        timestamp_label = ttk.Label(root, text="Timestamp when uploaded:")
-        timestamp_label.grid(column=0, row=7)
+        # Display image metrics
+        self.raw_metrics = {}
+        self.pro_metrics = {}
+        im_metrics_btn = ttk.Button(root,
+                                    text="Display Original Image Metrics",
+                                    command=lambda: self.display_metrics2())
+        im_metrics_btn.grid(column=1, row=7)
 
-        # Display time to process the image(s)
-        duration_label = ttk.Label(root, text="Time to process the image(s):")
-        duration_label.grid(column=2, row=7)
-
-        # Select processing method
-        size_label = ttk.Label(root, text="Image size:")
-        size_label.grid(column=0, row=8)
+        # Display image metrics
+        im_metrics_btn2 = ttk.Button(root,
+                                     text="Display Processed Image Metrics",
+                                     command=lambda: self.display_metrics3())
+        im_metrics_btn2.grid(column=3, row=7)
 
         # Download the image
         save_label = ttk.Label(root, text="Save image(s) as:")
@@ -134,6 +136,14 @@ class GUI:
     def display_metrics(self):
         metrics = client.user_metrics(self.user_name.get())
         messagebox.showinfo("Metrics", metrics)
+
+    def display_metrics2(self):
+        messagebox.showinfo("Original Image Metrics", self.raw_metrics)
+
+    def display_metrics3(self):
+        messagebox.showinfo("Processed Image Metrics", self.pro_metrics)
+
+
 
     def import_file(self):
         """
@@ -198,7 +208,7 @@ class GUI:
 
         # Ask user for directory and user ID
         savepath = filedialog.askdirectory()
-        id = self.user_name.get()
+        ID = self.user_name.get()
 
         single = check_multi_single(select_files)
 
@@ -206,24 +216,27 @@ class GUI:
 
             filename = select_files[0]  # Temporary
 
-            pro_img_arr, raw_img_arr = get_image_pair(filename, id)
+            pro_img_arr, raw_img_arr, raw_img_name = get_image_pair(filename,
+                                                                    ID)
 
             # display the raw and process image in GUI
             raw_img = ImageTk.PhotoImage(Image.fromarray(raw_img_arr)
                                          .resize([100, 100]))
             self.raw_img_label.configure(image=raw_img)
             self.raw_img_label.image = raw_img
+            self.raw_metrics = client.image_metrics(ID, raw_img_name)
 
             pro_img = ImageTk.PhotoImage(
                 Image.fromarray(pro_img_arr).resize([100, 100]))
             self.pro_img_label.configure(image=pro_img)
             self.pro_img_label.image = pro_img
+            self.pro_metrics = client.image_metrics(ID, filename)
 
             # Save file to a designated folder
             full_name = savepath + '/' + filename + '.' + self.saveas.get()
             save_single_image(pro_img_arr, full_name)
         else:
-            download_multiple(select_files, savepath, id, self.saveas.get())
+            download_multiple(select_files, savepath, ID, self.saveas.get())
 
 
 def get_image_pair(filename, ID):
@@ -236,12 +249,13 @@ def get_image_pair(filename, ID):
     Returns:
         pro_img (nparray): post-processed image
         raw_img (nparray): original image
+        raw_img_name (str): original image name
 
     """
     pro_img, method = client.get_image(ID, filename)
     raw_img_name = filename.replace('_' + method, "")
     raw_img, _ = client.get_image(ID, raw_img_name)
-    return pro_img, raw_img
+    return pro_img, raw_img, raw_img_name
 
 
 def get_file_name(filepath):  # need pytest
@@ -355,7 +369,7 @@ def download_multiple(select_files, savepath, id, ext):
     with zipfile.ZipFile(savepath + '/processed_images.zip', mode='w') as zf:
 
         for file in select_files:
-            pro_img_arr, _ = get_image_pair(file, id)
+            pro_img_arr, _, _ = get_image_pair(file, id)
             pro_img = Image.fromarray(pro_img_arr)
             output = io.BytesIO()
             pro_img.save(output, format=ext)

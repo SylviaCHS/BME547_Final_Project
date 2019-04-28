@@ -320,6 +320,7 @@ def GetImage():
                        "Image": Ib64,
                        "Process": image["Process"],
                        }
+
         else:
             outjson = "Image does not exist. Please upload image"
     else:
