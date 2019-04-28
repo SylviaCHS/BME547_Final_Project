@@ -292,8 +292,7 @@ def get_process():
             # I_test = bytes_to_plot(I_process_bytes, "tiff")
             # plt.imshow(I_test, interpolation="nearest")
             # plt.show()
-            t2 = datetime.datetime.now()
-            save_image(user, newfilename, I_process_bytes, process, t2,
+            save_image(user, newfilename, I_process_bytes, process,
                        latency, s, histogram, bins)
             user.raw_image.append(bool(0))
             user.save()
