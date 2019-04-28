@@ -83,7 +83,6 @@ def get_histogram(ID, filename):
         "filename": filename,
     }
     r = requests.get("http://127.0.0.1:5000/api/get_histogram", json=djson)
-    print(r.json())
     outfile = r.json()
     I2_b64 = outfile["Histogram"]
     i = save_b64_image(I2_b64)

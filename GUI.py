@@ -214,25 +214,34 @@ class GUI:
 
             filename = select_files[0]  # Temporary
 
-            pro_img_arr, raw_img_arr, raw_img_name = get_image_pair(filename,
-                                                                    ID)
+            pro_img_obj, raw_img_obj, raw_img_name, \
+                pro_hist_obj, raw_hist_obj = get_image_pair(filename, ID)
+
+            # Get Image metrics
+            self.raw_metrics = client.image_metrics(ID, raw_img_name)
+            self.pro_metrics = client.image_metrics(ID, filename)
 
             # display the raw and process image in GUI
-            raw_img = ImageTk.PhotoImage(Image.fromarray(raw_img_arr)
-                                         .resize([100, 100]))
+            raw_img = ImageTk.PhotoImage(raw_img_obj.resize([300, 300]))
             self.raw_img_label.configure(image=raw_img)
             self.raw_img_label.image = raw_img
-            self.raw_metrics = client.image_metrics(ID, raw_img_name)
 
-            pro_img = ImageTk.PhotoImage(
-                Image.fromarray(pro_img_arr).resize([100, 100]))
+            pro_img = ImageTk.PhotoImage(pro_img_obj.resize([300, 300]))
             self.pro_img_label.configure(image=pro_img)
             self.pro_img_label.image = pro_img
-            self.pro_metrics = client.image_metrics(ID, filename)
+
+            # display raw and process histogram in GUI
+            raw_hist = ImageTk.PhotoImage(raw_hist_obj)
+            self.raw_hist_label.configure(image=raw_hist)
+            self.raw_hist_label.image = raw_hist
+
+            pro_hist = ImageTk.PhotoImage(pro_hist_obj)
+            self.pro_hist_label.configure(image=pro_hist)
+            self.pro_hist_label.image = pro_hist
 
             # Save file to a designated folder
             full_name = savepath + '/' + filename + '.' + self.saveas.get()
-            save_single_image(pro_img_arr, full_name)
+            pro_img_obj.save(full_name)
         else:
             download_multiple(select_files, savepath, ID, self.saveas.get())
 
@@ -250,10 +259,21 @@ def get_image_pair(filename, ID):
         raw_img_name (str): original image name
 
     """
-    pro_img, method = client.get_image(ID, filename)
+    pro_img_arr, method = client.get_image(ID, filename)
+    pro_img = Image.fromarray(pro_img_arr)
+
     raw_img_name = filename.replace('_' + method, "")
-    raw_img, _ = client.get_image(ID, raw_img_name)
-    return pro_img, raw_img, raw_img_name
+
+    raw_img_arr, _ = client.get_image(ID, raw_img_name)
+    raw_img = Image.fromarray(raw_img_arr)
+
+    pro_hist = Image.fromarray(client.get_histogram(ID, filename))
+    pro_hist.show()
+    print(type(client.get_histogram(ID, filename)))
+
+    raw_hist = Image.fromarray(client.get_histogram(ID, filename))
+
+    return pro_img, raw_img, raw_img_name, pro_hist, raw_hist
 
 
 def get_file_name(filepath):  # need pytest
@@ -270,17 +290,6 @@ def get_file_name(filepath):  # need pytest
     """
     filename, extension = os.path.splitext(filepath.split('/')[-1])
     return filename, extension
-
-
-def save_single_image(img, name):
-    """
-    Save the resulted image to a local directory
-    Args:
-        img (nparray): Image received from server
-        name (str): full name with filepath (specified by user) and filename
-    """
-    im = Image.fromarray(img)
-    im.save(name)
 
 
 def check_multi_single(filenames):
@@ -367,7 +376,7 @@ def download_multiple(select_files, savepath, id, ext):
     with zipfile.ZipFile(savepath + '/processed_images.zip', mode='w') as zf:
 
         for file in select_files:
-            pro_img_arr, _, _ = get_image_pair(file, id)
+            pro_img_arr, _, _, _, _ = get_image_pair(file, id)
             pro_img = Image.fromarray(pro_img_arr)
             output = io.BytesIO()
             pro_img.save(output, format=ext)
