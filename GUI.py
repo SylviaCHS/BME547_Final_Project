@@ -5,6 +5,8 @@ from tkinter import messagebox
 import os
 import client
 from tkinter import filedialog
+import zipfile
+import io
 
 
 class GUI:
@@ -29,7 +31,7 @@ class GUI:
         th_check.grid(column=2, row=1)
 
         # Get file path
-        self.filepath = StringVar()
+        # self.filepath = StringVar()
         import_btn = ttk.Button(root, text='Import File(s)',
                                 command=lambda: self.import_file())
         import_btn.grid(column=1, row=2)
@@ -161,11 +163,7 @@ class GUI:
         # Upload new image
         if new == '1':
             client.post_new_user(ID)
-        self.filename, self.extension = get_file_name(self.filepath)
-        client.upload_file(ID, self.filename, self.extension, self.filepath[0])
-
-        # Request to process image
-        client.process_image(ID, self.filename, self.method.get())
+        run_analysis(self.filepath, ID, self.method.get())
 
     def load_function(self):
         """
@@ -195,25 +193,35 @@ class GUI:
         # Get selected filenames
         index = self.name_list.curselection()
         select_files = [self.image_names[i] for i in index]
-        filename = select_files[0]  # Temporary
 
-        pro_img_arr, raw_img_arr = get_image_pair(filename,
-                                                  self.user_name.get())
-
-        raw_img = ImageTk.PhotoImage(Image.fromarray(raw_img_arr)
-                                     .resize([100, 100]))
-        self.raw_img_label.configure(image=raw_img)
-        self.raw_img_label.image = raw_img
-
-        pro_img = ImageTk.PhotoImage(
-            Image.fromarray(pro_img_arr).resize([100, 100]))
-        self.pro_img_label.configure(image=pro_img)
-        self.pro_img_label.image = pro_img
-
-        # Save file to a designated folder
+        # Ask user for directory and user ID
         savepath = filedialog.askdirectory()
-        full_name = savepath + '/' + filename + '.' + self.saveas.get()
-        save_single_image(pro_img_arr, full_name)
+        id = self.user_name.get()
+
+        single = check_multi_single(select_files)
+
+        if single is True:
+
+            filename = select_files[0]  # Temporary
+
+            pro_img_arr, raw_img_arr = get_image_pair(filename, id)
+
+            # display the raw and process image in GUI
+            raw_img = ImageTk.PhotoImage(Image.fromarray(raw_img_arr)
+                                         .resize([100, 100]))
+            self.raw_img_label.configure(image=raw_img)
+            self.raw_img_label.image = raw_img
+
+            pro_img = ImageTk.PhotoImage(
+                Image.fromarray(pro_img_arr).resize([100, 100]))
+            self.pro_img_label.configure(image=pro_img)
+            self.pro_img_label.image = pro_img
+
+            # Save file to a designated folder
+            full_name = savepath + '/' + filename + '.' + self.saveas.get()
+            save_single_image(pro_img_arr, full_name)
+        else:
+            download_multiple(select_files, savepath, id, self.saveas.get())
 
 
 def get_image_pair(filename, ID):
@@ -239,14 +247,14 @@ def get_file_name(filepath):  # need pytest
     Extract filename and extension from filepath
 
     Args:
-        filepath (StrVar):  filepath of the image
+        filepath (str):  filepath of the image
 
     Returns:
         filename (str): filename without path and extension
         extension (str): image type
 
     """
-    filename, extension = os.path.splitext(filepath[0].split('/')[-1])
+    filename, extension = os.path.splitext(filepath.split('/')[-1])
     return filename, extension
 
 
@@ -254,12 +262,76 @@ def save_single_image(img, name):
     """
     Save the resulted image to a local directory
     Args:
-        img:
-        name (str): Desired output image type
+        img (nparray): Image received from server
+        name (str): full name with filepath (specified by user) and filename
     """
-
     im = Image.fromarray(img)
     im.save(name)
+
+
+def check_multi_single(filenames):
+    """
+    Check how many files are chosen
+
+    Args:
+        filenames (tuple: A tuple of all the filepaths
+
+    Returns:
+        single (bool): Return whether it is a single file (True)
+                       or multiple files (False)
+
+    """
+    num = len(filenames)
+    if num == 1:
+        single = bool(1)
+    else:
+        single = bool(0)
+    return single
+
+
+def run_analysis(filepath, ID, method):
+    """
+    Upload image(s) and run the required analysis
+
+    Args:
+        filepath (str): filepath of the image including filename
+        ID (str): user name
+        method (str): user specified image processing method
+
+    Returns:
+
+    """
+    for path in filepath:
+
+        filename, extension = get_file_name(path)
+
+        # Save raw image to database
+        client.upload_file(ID, filename, extension, path)
+
+        # Request to process image
+        client.process_image(ID, filename, method)
+
+
+def download_multiple(select_files, savepath, id, ext):
+    """
+    Download multiple processed images in a zip archive.
+
+    Args:
+        select_files (list): list of names of selected images
+        savepath (str): path of folder user chose
+        id (str): user name
+        ext (str): User specified image type
+
+    """
+    with zipfile.ZipFile(savepath + '/processed_images.zip', mode='w') as zf:
+
+        for file in select_files:
+            pro_img_arr, _ = get_image_pair(file, id)
+            pro_img = Image.fromarray(pro_img_arr)
+            output = io.BytesIO()
+            pro_img.save(output, format=ext)
+            filename = file + '.' + ext
+            zf.writestr(filename, output.getvalue())
 
 
 if __name__ == '__main__':
