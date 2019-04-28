@@ -221,29 +221,47 @@ class GUI:
             self.raw_metrics = client.image_metrics(ID, raw_img_name)
             self.pro_metrics = client.image_metrics(ID, filename)
 
+
+            size = image_size(raw_img_obj)
+
             # display the raw and process image in GUI
-            raw_img = ImageTk.PhotoImage(raw_img_obj.resize([300, 300]))
+            raw_img = ImageTk.PhotoImage(raw_img_obj.resize(size))
             self.raw_img_label.configure(image=raw_img)
             self.raw_img_label.image = raw_img
 
-            pro_img = ImageTk.PhotoImage(pro_img_obj.resize([300, 300]))
+            pro_img = ImageTk.PhotoImage(pro_img_obj.resize(size))
             self.pro_img_label.configure(image=pro_img)
             self.pro_img_label.image = pro_img
 
-            # display raw and process histogram in GUI
-            raw_hist = ImageTk.PhotoImage(raw_hist_obj)
-            self.raw_hist_label.configure(image=raw_hist)
-            self.raw_hist_label.image = raw_hist
-
-            pro_hist = ImageTk.PhotoImage(pro_hist_obj)
-            self.pro_hist_label.configure(image=pro_hist)
-            self.pro_hist_label.image = pro_hist
+            # # display raw and process histogram in GUI
+            # raw_hist = ImageTk.PhotoImage(raw_hist_obj)
+            # self.raw_hist_label.configure(image=raw_hist)
+            # self.raw_hist_label.image = raw_hist
+            #
+            # pro_hist = ImageTk.PhotoImage(pro_hist_obj)
+            # self.pro_hist_label.configure(image=pro_hist)
+            # self.pro_hist_label.image = pro_hist
 
             # Save file to a designated folder
             full_name = savepath + '/' + filename + '.' + self.saveas.get()
             pro_img_obj.save(full_name)
         else:
             download_multiple(select_files, savepath, ID, self.saveas.get())
+
+
+def image_size(img_obj):
+    img = np.asarray(im_obj)
+
+
+    l_max = max(w, h)
+    if l_max > 300:
+        num = l_max/300
+    else:
+        num = 1
+    w = round(w / num)
+    h = round(h / num)
+    size = [w, h]
+    return size
 
 
 def get_image_pair(filename, ID):
@@ -268,8 +286,6 @@ def get_image_pair(filename, ID):
     raw_img = Image.fromarray(raw_img_arr)
 
     pro_hist = Image.fromarray(client.get_histogram(ID, filename))
-    pro_hist.show()
-    print(type(client.get_histogram(ID, filename)))
 
     raw_hist = Image.fromarray(client.get_histogram(ID, raw_img_name))
 
