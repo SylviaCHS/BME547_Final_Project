@@ -6,8 +6,7 @@ import numpy as np
 import datetime
 import math
 app = Flask(__name__)
-connect("mongodb+srv://Sylvia:Ks0l8NyUGEBzhZ2Y@bme547-zlm8s.mongodb."
-        "net/test?retryWrites=true")
+connect("mongodb+srv://BME547:06Y4JtVuZVl6hRIv@cluster0-bimlm.mongodb.net/test?retryWrites=true")
 
 
 class User(MongoModel):
@@ -20,3 +19,5 @@ class User(MongoModel):
     ImageFile = fields.ListField()
     filenames = fields.ListField()
     raw_image = fields.ListField()
+
+    # 06Y4JtVuZVl6hRIv

@@ -10,7 +10,7 @@ import matplotlib.image as mpimg
 def main():
     ID = "Kim3"
     Image_List = []
-    filename = "Reveille"
+    filename = "Reveille_Histogram Equalization"
     extension = "png"
     filepathname = r"C:\Users\lenno\OneDrive\Documents\KimAndRev copy.png"
     user = {
@@ -40,14 +40,32 @@ def main():
     pjson = {
         "username": ID,
         "filename": filename,
-        "process": "log_com"
+        "process": "Histogram Equalization"
     }
     r6 = requests.post("http://127.0.0.1:5000/api/process_image", json=pjson)
-    outfile = r6.json()
+    newfilename = filename + "_Histogram Equalization"
+    imjson = {
+        "username": ID,
+        "filename": newfilename
+    }
+    print(r6.json())
+    r7 = requests.get("http://127.0.0.1:5000/api/get_image", json=imjson)
+    outfile = r7.json()
     # print(outfile)
     I2_b64 = outfile["Image"]
     # print(I2_b64)
     save_b64_image(I2_b64)
+    metjson = {
+             "username": ID
+            }
+    r = requests.get("http://127.0.0.1:5000/api/user_metrics", json=metjson)
+    print(r.json())
+    metjson = {
+             "username": ID,
+            "filename": newfilename
+            }
+    r = requests.get("http://127.0.0.1:5000/api/image_metrics", json=metjson)
+    print(r.json())
 
 
 def read_file_as_b64(image_path):
