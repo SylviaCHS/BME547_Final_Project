@@ -237,14 +237,14 @@ class GUI:
             self.pro_img_label.configure(image=pro_img)
             self.pro_img_label.image = pro_img
 
-            # # display raw and process histogram in GUI
-            # raw_hist = ImageTk.PhotoImage(raw_hist_obj)
-            # self.raw_hist_label.configure(image=raw_hist)
-            # self.raw_hist_label.image = raw_hist
-            #
-            # pro_hist = ImageTk.PhotoImage(pro_hist_obj)
-            # self.pro_hist_label.configure(image=pro_hist)
-            # self.pro_hist_label.image = pro_hist
+            # display raw and process histogram in GUI
+            raw_hist = ImageTk.PhotoImage(raw_hist_obj)
+            self.raw_hist_label.configure(image=raw_hist)
+            self.raw_hist_label.image = raw_hist
+
+            pro_hist = ImageTk.PhotoImage(pro_hist_obj)
+            self.pro_hist_label.configure(image=pro_hist)
+            self.pro_hist_label.image = pro_hist
 
             # Save file to a designated folder
             full_name = savepath + '/' + filename + '.' + self.saveas.get()

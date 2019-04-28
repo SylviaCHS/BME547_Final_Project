@@ -161,9 +161,11 @@ def NewUser():
         u = User(UserID=username)
         u.save()
         outstr = "User saved successfully"
+        code = 200
     else:
-        outstr = "User already exists. Select new username"
-    return jsonify(outstr)
+        outstr = "Error: User already exists. Select new username"
+        code = 400
+    return jsonify(outstr), code
 
 
 @app.route("/api/new_image", methods=["POST"])
@@ -203,14 +205,19 @@ def NewImage():
             s = [m, n]
             outstr = save_image(user, filename, image_tif, "None", "None",
                                 s, histbytes)
+            code = 200
             # Store in database that it is the original image user sent in
             user.raw_image.append(bool(1))
             user.save()
         else:
-            outstr = "Image already exists. Please select another name."
+            outstr = "Warning: Image already exists. " \
+                     "Will run process on existing Image"
+            code = 200
     else:
-        outstr = "User does not exist. Verify username or create new account"
-    return outstr
+        outstr = "Error: User does not exist. " \
+                 "Verify username or create new account"
+        code = 400
+    return jsonify(outstr), code
 
 
 def save_image(user, filename, image_tif, process, latency, size, hist):
@@ -263,10 +270,11 @@ def get_image_list():
     if x is False:
         pro_filenames = get_process_image_list(username)
         outjson = pro_filenames
-
+        code = 200
     else:
         outjson = ["Image does not exist. Please upload image"]
-    return jsonify(outjson)
+        code = 400
+    return jsonify(outjson), code
 
 
 def get_process_image_list(username):
@@ -318,12 +326,14 @@ def GetImage():
                        "Image": Ib64,
                        "Process": image["Process"],
                        }
-
+            code = 200
         else:
-            outjson = "Image does not exist. Please upload image"
+            outjson = "Error: Image does not exist. Please upload image"
+            code = 400
     else:
-        outjson = "User does not exist. Please upload image"
-    return jsonify(outjson)
+        outjson = "Error: User does not exist."
+        code = 400
+    return jsonify(outjson), code
 
 
 def find_image(filename, username):

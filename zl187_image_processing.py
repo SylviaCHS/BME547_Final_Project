@@ -22,6 +22,7 @@ def plot_his(image):
             plt.show()
             plt.tight_layout()
             outfig = make_figbw(his, bins)
+            plt.close()
         if color == 2:
             his1, bins1 = ski.exposure.histogram(image[:, :, 0],
                                                  normalize=True)
@@ -41,6 +42,7 @@ def plot_his(image):
             # plt.tight_layout()
             # plt.savefig(fname)
             outfig = make_fig(his1, bins1, his2, bins2, his3, bins3)
+            plt.close()
     else:
         outfig = ("The image format is not correct.")
         his = 0
@@ -69,6 +71,7 @@ def make_fig(his1, bins1, his2, bins2, his3, bins3):
     fig.canvas.draw()
     data = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
     data = data.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+    plt.close()
     return data
 
 
@@ -87,6 +90,7 @@ def make_figbw(his1, bins1):
     fig.canvas.draw()
     data = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
     data = data.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+    plt.close()
     return data
 
 
