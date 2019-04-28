@@ -10,7 +10,7 @@ import matplotlib.image as mpimg
 def main():
     ID = "Kim3"
     Image_List = []
-    filename = "Reveille_Histogram Equalization"
+    filename = "Reveille"
     extension = "png"
     filepathname = r"C:\Users\lenno\OneDrive\Documents\KimAndRev copy.png"
     user = {
@@ -67,6 +67,16 @@ def main():
             }
     r = requests.get("http://127.0.0.1:5000/api/image_metrics", json=metjson)
     print(r.json())
+    djson = {
+        "username": ID,
+        "filename": newfilename,
+        "extension": "JPEG"
+    }
+    r = requests.get("http://127.0.0.1:5000/api/download_image", json=djson)
+    print(r.json())
+    outfile = r.json()
+    I2_b64 = outfile["Image"]
+    download_b64_image(I2_b64, "Reveille_HistogramEq.jpg")
 
 
 def read_file_as_b64(image_path):
@@ -83,6 +93,13 @@ def save_b64_image(base64_string):
     plt.imshow(i, interpolation='nearest')
     plt.show()
     return i
+
+
+def download_b64_image(base64_string, filename):
+    image_bytes = base64.b64decode(base64_string)
+    with open(filename, "wb") as out_file:
+        out_file.write(image_bytes)
+    return
 
 
 if __name__ == "__main__":

@@ -378,7 +378,7 @@ def find_stats(instr, List):
 
 @app.route("/api/download_image", methods=["GET"])
 def download_image():
-    r = requests.get_json()
+    r = request.get_json()
     username = r["username"]
     filename = r["filename"]
     extension = r["extension"]
@@ -388,8 +388,8 @@ def download_image():
         if y is False:
             I = find_image(filename, username)
             file = I["Image"]
-            outfile = type_convert(file, extension)
-            outstring = read_data_as_b64(outfile)
+            outfile = convert_file(file, extension)
+            outstring = {"Image": read_data_as_b64(outfile)}
         else:
             outstring = "Image does not exist"
     else:
