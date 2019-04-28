@@ -284,7 +284,6 @@ def get_process_image_list(username):
 
     pro_filenames = [user.filenames[i] for i, x in
                      enumerate(user.raw_image) if x is False]
-    print(user.filenames)
     return pro_filenames
 
 
@@ -398,9 +397,7 @@ def get_process():
             Iraw = I["Image"]
             Imat = bytes_to_plot(Iraw, "tiff")
             [I_process, latency] = process_image(Imat, process)
-            [hist_process, bins_process] = Process.plot_his(I_process)
-            histogram = hist_process
-            bins = bins_process
+            [histogram, bins] = Process.plot_his(I_process)
             [m, n] = Process.get_size(I_process)
             s = [m, n]
             # plt.imshow(I_process, interpolation="nearest")
@@ -409,9 +406,8 @@ def get_process():
             # I_test = bytes_to_plot(I_process_bytes, "tiff")
             # plt.imshow(I_test, interpolation="nearest")
             # plt.show()
-            # t2 = datetime.datetime.now()
-            save_image(user, newfilename, I_process_bytes, process, latency,
-                       s, histogram, bins)
+            save_image(user, newfilename, I_process_bytes, process,
+                       latency, s, histogram, bins)
             user.raw_image.append(bool(0))
             user.save()
             outjson = "Image is processed successfully"
