@@ -134,7 +134,7 @@ class GUI:
         metrics_btn.grid(column=4, row=9)
 
         self.msg = StringVar()
-        msg_label = Message(root, textvariable=var, relief=RAISED)
+        msg_label = Message(root, textvariable=self.msg, relief=RAISED)
         msg_label.grid(column=0, row=9, columnspan=4)
 
     def display_metrics(self):
@@ -173,7 +173,7 @@ class GUI:
         """
         ID = self.user_name.get()
         new = self.new_factor.get()
-
+        self.msg = 'Running analysis'
         # Upload new image
         if new == '1':
             self.msg = client.post_new_user(ID)
@@ -211,7 +211,7 @@ class GUI:
         # Ask user for directory and user ID
         savepath = filedialog.askdirectory()
         ID = self.user_name.get()
-
+        self.msg = 'Saving files to the designated folder'
         single = check_multi_single(select_files)
 
         if single is True:
@@ -337,6 +337,7 @@ def check_zip_file(filepath, ID, method):
         msg = run_zip_analysis(filepath, ID, method)
     else:
         run_analysis(filepath, ID, method)
+        msg = 'running analysis on the images chosen'
     return msg
 
 
@@ -356,8 +357,8 @@ def run_zip_analysis(filepath, ID, method):
                                          extension, fh.getvalue())
 
                 # Request to process image
-                msg = client.process_image(ID, filename, method)
-    return msg1, msg2
+                client.process_image(ID, filename, method)
+    return msg
 
 
 def run_analysis(filepath, ID, method):
