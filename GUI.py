@@ -126,12 +126,14 @@ class GUI:
                                   command=lambda: self.download_function())
         download_btn.grid(column=4, row=8)
 
-        def display_metrics():
-            messagebox.showinfo("Metrics", "Hello World")
         # pop-up window to display metrics
         metrics_btn = ttk.Button(root, text="Display Metrics",
-                                 command=display_metrics)
+                                 command=lambda: self.display_metrics())
         metrics_btn.grid(column=4, row=9)
+
+    def display_metrics(self):
+        metrics = client.user_metrics(self.user_name.get())
+        messagebox.showinfo("Metrics", metrics)
 
     def import_file(self):
         """

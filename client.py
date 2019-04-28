@@ -60,6 +60,14 @@ def process_image(ID, filename, method):
     print(r6.json())
 
 
+def user_metrics(ID):
+    mjson = {
+        "username": ID
+    }
+    r6 = requests.get("http://127.0.0.1:5000/api/user_metrics", json=mjson)
+    return r6.json()
+
+
 def read_file_as_b64(image_path):
     with open(image_path, "rb") as image_file:
         b64_bytes = base64.b64encode(image_file.read())
