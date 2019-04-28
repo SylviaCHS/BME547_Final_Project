@@ -165,7 +165,7 @@ class GUI:
         # Upload new image
         if new == '1':
             client.post_new_user(ID)
-        run_analysis(self.filepath, ID, self.method.get())
+        check_zip_file(self.filepath, ID, self.method.get())
 
     def load_function(self):
         """
@@ -276,7 +276,8 @@ def check_multi_single(filenames):
     Check how many files are chosen
 
     Args:
-        filenames (tuple: A tuple of all the filepaths
+        filenames (list): A list of all the filepaths or string of
+                                filepath
 
     Returns:
         single (bool): Return whether it is a single file (True)
@@ -289,6 +290,32 @@ def check_multi_single(filenames):
     else:
         single = bool(0)
     return single
+
+
+def check_zip_file(filepath, ID, method):
+    filename, extension = get_file_name(filepath[0])
+    if extension == '.zip':
+        run_zip_analysis(filepath, ID, method)
+    else:
+        run_analysis(filepath, ID, method)
+
+
+def run_zip_analysis(filepath, ID, method):
+    with zipfile.ZipFile(filepath[0]) as zf:
+        for entry in zf.namelist():
+            if not entry.startswith("__"):  # Get rid hidden files in zip
+                with zf.open(entry) as file:
+                    data = file.read()
+                    fh = io.BytesIO(data)
+                    Image.open(fh)
+
+                filename, extension = get_file_name(file.name)
+
+                # Save raw image to database
+                client.upload_file(ID, filename, extension, fh.getvalue())
+
+                # Request to process image
+                client.process_image(ID, filename, method)
 
 
 def run_analysis(filepath, ID, method):
