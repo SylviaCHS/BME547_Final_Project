@@ -46,7 +46,8 @@ def main():
     newfilename = filename + "_Histogram Equalization"
     imjson = {
         "username": ID,
-        "filename": newfilename
+        "filename": newfilename,
+        "process": "Histogram Equalization"
     }
     print(r6.json())
     r7 = requests.get("http://127.0.0.1:5000/api/get_image", json=imjson)
@@ -62,7 +63,7 @@ def main():
     print(r.json())
     metjson = {
              "username": ID,
-            "filename": newfilename
+             "filename": newfilename
             }
     r = requests.get("http://127.0.0.1:5000/api/image_metrics", json=metjson)
     print(r.json())

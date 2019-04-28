@@ -56,13 +56,13 @@ def plot_to_bytes(plot):
     return data
 
 
-def convert_to_tif(I):  # Test me!
+def convert_file(I, extension):  # Test me!
     """
     Converts raw bytes of any format into tiff
     """
     with BytesIO() as f:
         img = Image.open(io.BytesIO(I)).convert("RGB")
-        img.save(f, format='TIFF')
+        img.save(f, format=extension)
         data = f.getvalue()
     return data
 
@@ -134,7 +134,7 @@ def NewImage():
             user = User.objects.raw({"_id": username}).first()
 
             image = save_b64_image(rawimage)
-            image_tif = convert_to_tif(image)
+            image_tif = convert_file(image, "TIFF")
             A = bytes_to_plot(image_tif, "tiff")
             [his_raw, bins_raw] = Process.plot_his(A)
             histogram = his_raw
@@ -295,8 +295,8 @@ def get_process():
             # I_test = bytes_to_plot(I_process_bytes, "tiff")
             # plt.imshow(I_test, interpolation="nearest")
             # plt.show()
-            t2 = datetime.datetime.now()
-            save_image(user, newfilename, I_process_bytes, t2, latency,
+            # t2 = datetime.datetime.now()
+            save_image(user, newfilename, I_process_bytes, process, latency,
                        s, histogram, bins)
             user.raw_image.append(bool(0))
             user.save()
@@ -308,7 +308,7 @@ def get_process():
     return jsonify(outjson)
 
 
-@app.route("/api/user_metrics/<username>", methods=["GET"])
+@app.route("/api/user_metrics", methods=["GET"])
 def user_metrics():
     r = request.get_json()
     username = r["username"]
@@ -317,38 +317,84 @@ def user_metrics():
         outjson = get_metrics(username)
     else:
         outjson = "User does not exist"
+    return jsonify(outjson)
+
+
+@app.route("/api/image_metrics", methods=["GET"])
+def image_metrics():
+    r = request.get_json()
+    username = r["username"]
+    filename = r["filename"]
+    x = verify_newuser(username)
+    if x is False:
+        user = User.objects.raw({"_id": username}).first()
+        y = verify_newimage(filename, username)
+        if y is False:
+            I = find_image(filename, username)
+            outdict = {
+                      "timestamp": I["Timestamp"],
+                      "size": I["Size"],
+                      "latency": I["Latency"],
+                      "process": I["Process"]
+                      }
+        else:
+            outdict = ["This image does not exist"]
+    else:
+        outdict = ["User does not exist"]
+    return jsonify(outdict)
 
 
 def get_metrics(username):
     user = User.objects.raw({"_id": username}).first()
     Image_List = user.ImageFile
-    his_eq_dict = find_stats("his_eq", Image_List)
-    con_str_dict = find_stats("con_str", Image_List)
-    log_com_dict = find_stats("log_com", Image_List)
-    rev_dict = find_stats("rev", Image_List)
+    his_eq_dict = find_stats("Histogram Equalization", Image_List)
+    con_str_dict = find_stats("Gontrast Stretching", Image_List)
+    log_com_dict = find_stats("Log Compression", Image_List)
+    rev_dict = find_stats("Reverse Video", Image_List)
     outdict = {
               "Histogram Equalization": his_eq_dict,
               "Log Compression": log_com_dict,
               "Contrast Stretching": con_str_dict,
-              "Reverse Image": rev_dict
+              "Reverse Video": rev_dict
               }
     return outdict
 
 
 def find_stats(instr, List):
     count = 0
+    latmat = [0]
     for i in List:
-        if List["process"] == instr:
-            latmat[count] = List["latency"]
+        if i["Process"] == instr:
+            latmat[count] = float(i["Latency"])
             count = count+1
-    latarr = np.ndarray(latmat)
-    latmean = np.mean(latmat)
-    outdict = {"Count": count,
-               "Latency": latmean
-               }
+        if latmat == [0]:
+            latmean = "N/A"
+        else:
+            latarr = np.asarray(latmat)
+            latmean = np.mean(latmat)
+    info = [count, latmean]
+    return info
 
-    return outdict
 
+@app.route("/api/download_image", methods=["GET"])
+def download_image():
+    r = requests.get_json()
+    username = r["username"]
+    filename = r["filename"]
+    extension = r["extension"]
+    x = verify_newuser(username)
+    if x is False:
+        y = verify_newimage(filename, username)
+        if y is False:
+            I = find_image(filename, username)
+            file = I["Image"]
+            outfile = type_convert(file, extension)
+            outstring = read_data_as_b64(outfile)
+        else:
+            outstring = "Image does not exist"
+    else:
+        outstring = "User does not exist"
+    return jsonify(outstring)
 
 if __name__ == '__main__':
     """
