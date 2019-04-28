@@ -5,6 +5,8 @@ from tkinter import messagebox
 import os
 import client
 from tkinter import filedialog
+import zipfile
+import io
 
 
 class GUI:
@@ -191,25 +193,35 @@ class GUI:
         # Get selected filenames
         index = self.name_list.curselection()
         select_files = [self.image_names[i] for i in index]
-        filename = select_files[0]  # Temporary
 
-        pro_img_arr, raw_img_arr = get_image_pair(filename,
-                                                  self.user_name.get())
-
-        raw_img = ImageTk.PhotoImage(Image.fromarray(raw_img_arr)
-                                     .resize([100, 100]))
-        self.raw_img_label.configure(image=raw_img)
-        self.raw_img_label.image = raw_img
-
-        pro_img = ImageTk.PhotoImage(
-            Image.fromarray(pro_img_arr).resize([100, 100]))
-        self.pro_img_label.configure(image=pro_img)
-        self.pro_img_label.image = pro_img
-
-        # Save file to a designated folder
+        # Ask user for directory and user ID
         savepath = filedialog.askdirectory()
-        full_name = savepath + '/' + filename + '.' + self.saveas.get()
-        save_single_image(pro_img_arr, full_name)
+        id = self.user_name.get()
+
+        single = check_multi_single(select_files)
+
+        if single is True:
+
+            filename = select_files[0]  # Temporary
+
+            pro_img_arr, raw_img_arr = get_image_pair(filename, id)
+
+            # display the raw and process image in GUI
+            raw_img = ImageTk.PhotoImage(Image.fromarray(raw_img_arr)
+                                         .resize([100, 100]))
+            self.raw_img_label.configure(image=raw_img)
+            self.raw_img_label.image = raw_img
+
+            pro_img = ImageTk.PhotoImage(
+                Image.fromarray(pro_img_arr).resize([100, 100]))
+            self.pro_img_label.configure(image=pro_img)
+            self.pro_img_label.image = pro_img
+
+            # Save file to a designated folder
+            full_name = savepath + '/' + filename + '.' + self.saveas.get()
+            save_single_image(pro_img_arr, full_name)
+        else:
+            download_multiple(select_files, savepath, id, self.saveas.get())
 
 
 def get_image_pair(filename, ID):
@@ -298,6 +310,20 @@ def run_analysis(filepath, ID, method):
 
         # Request to process image
         client.process_image(ID, filename, method)
+
+
+def download_multiple(select_files, savepath, id, ext):
+    with zipfile.ZipFile(savepath + '/processed_images.zip', mode='w') as zf:
+
+                         #compression=zipfile.ZIP_DEFLATED,
+
+        for file in select_files:
+            pro_img_arr, _ = get_image_pair(file, id)
+            pro_img = Image.fromarray(pro_img_arr)
+            output = io.BytesIO()
+            pro_img.save(output, format=ext)
+            filename = file + '.' + ext
+            zf.writestr(filename, output.getvalue())
 
 
 if __name__ == '__main__':
