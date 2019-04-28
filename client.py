@@ -77,6 +77,19 @@ def image_metrics(ID, filename):
     return r8.json()
 
 
+def get_histogram(ID, filename):
+    djson = {
+        "username": ID,
+        "filename": filename,
+    }
+    r = requests.get("http://127.0.0.1:5000/api/get_histogram", json=djson)
+    print(r.json())
+    outfile = r.json()
+    I2_b64 = outfile["Histogram"]
+    i = save_b64_image(I2_b64)
+    return i
+
+
 def read_file_as_b64(image_path):
     # If input is from zip archive, it will be in bytes
     if type(image_path) is bytes:

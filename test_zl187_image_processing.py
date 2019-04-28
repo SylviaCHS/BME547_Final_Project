@@ -5,7 +5,7 @@ import numpy as np
 def test_plot_his1():
     from zl187_image_processing import plot_his
     image = np.ones([2, 2], dtype=np.uint8)
-    his, bins = plot_his(image)
+    [fig, his, bins] = plot_his(image)
     his_exp = np.array([1])
     assert his.all() == his_exp.all()
 
@@ -13,7 +13,7 @@ def test_plot_his1():
 def test_plot_his2():
     from zl187_image_processing import plot_his
     image = np.ones([2, 2], dtype=np.uint8)
-    his, bins = plot_his(image)
+    [fig, his, bins] = plot_his(image)
     bins_exp = np.array([1])
     assert bins.all() == bins_exp.all()
 
@@ -21,7 +21,7 @@ def test_plot_his2():
 def test_plot_his3():
     from zl187_image_processing import plot_his
     image = np.ones([2, 2, 3], dtype=np.uint8)
-    his, bins = plot_his(image)
+    [fig, his, bins] = plot_his(image)
     his_exp = np.array([[1], [1], [1]])
     assert np.array(his).all() == his_exp.all()
 
@@ -29,7 +29,7 @@ def test_plot_his3():
 def test_plot_his4():
     from zl187_image_processing import plot_his
     image = np.ones([2, 2, 3], dtype=np.uint8)
-    his, bins = plot_his(image)
+    [fig, his, bins] = plot_his(image)
     bins_exp = np.array([[1], [1], [1]])
     assert np.array(bins).all() == bins_exp.all()
 

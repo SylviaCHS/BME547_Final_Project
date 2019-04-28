@@ -21,6 +21,7 @@ def plot_his(image):
             plt.plot(bins, his)
             plt.show()
             plt.tight_layout()
+            outfig = make_figbw(his, bins)
         if color == 2:
             his1, bins1 = ski.exposure.histogram(image[:, :, 0],
                                                  normalize=True)
@@ -29,13 +30,64 @@ def plot_his(image):
             his3, bins3 = ski.exposure.histogram(image[:, :, 2],
                                                  normalize=True)
 
-            his = np.array([his1.tolist(), his2.tolist(),
-                            his3.tolist()]).tolist()
-            bins = np.array([bins1.tolist(), bins2.tolist(),
-                             bins3.tolist()]).tolist()
+            his = np.array([his1, his2,
+                            his3])
+            bins = np.array([bins1, bins2,
+                             bins3])
+            # plt.plot(bins1, his1)
+            # plt.plot(bins2, his2)
+            # plt.plot(bins3, his3)
+            # plt.show()
+            # plt.tight_layout()
+            # plt.savefig(fname)
+            outfig = make_fig(his1, bins1, his2, bins2, his3, bins3)
     else:
-        print("The image format is not correct.")
-    return his, bins
+        outfig = ("The image format is not correct.")
+        his = 0
+        bins = 0
+    return [outfig, his, bins]
+
+
+def make_fig(his1, bins1, his2, bins2, his3, bins3):
+    """ Converts histogram into image to
+        be returned to user
+    Args:
+        his1: histogram values of red channel
+        his2: histogram values of green channel
+        his3: histogram values of blue channel
+        bins1: bins for red channel
+        bins2: bins for green channel
+        bine3: bins for blue channel
+    Returns:
+        fig: Image of 3 channel histogram
+    """
+    fig = plt.figure()
+    plt.plot(bins1, his1)
+    plt.plot(bins2, his2)
+    plt.plot(bins3, his3)
+    plt.tight_layout()
+    fig.canvas.draw()
+    data = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
+    data = data.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+    return data
+
+
+def make_figbw(his1, bins1):
+    """ Converts histogram into image that can
+        be returned to user
+    Args:
+        his1: histogram values
+        bins1: bins
+    Returns:
+        fig: Image of 1 channel histogram
+    """
+    fig = plt.figure()
+    plt.plot(bins1, his1)
+    plt.tight_layout()
+    fig.canvas.draw()
+    data = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
+    data = data.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+    return data
 
 
 def his_eq(image):
