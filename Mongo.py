@@ -1,10 +1,6 @@
-import os
-from flask import Flask, jsonify, request
+from flask import Flask
 from pymodm import connect
 from pymodm import MongoModel, fields
-import numpy as np
-import datetime
-import math
 app = Flask(__name__)
 connect("mongodb+srv://BME547:06Y4JtVuZVl6hRIv@cluster0"
         "-bimlm.mongodb.net/test?retryWrites=true")
