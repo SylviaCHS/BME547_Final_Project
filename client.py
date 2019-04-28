@@ -37,14 +37,16 @@ def get_image_list(username):
     return outfile
 
 
-def get_image(ID, filename):
+def get_image_file(ID, filename):
     imjson = {
         "username": ID,
         "filename": filename
     }
-
     r6 = requests.get("http://127.0.0.1:5000/api/get_image", json=imjson)
-    outfile = r6.json()
+    return r6.json()
+
+
+def get_image(outfile):
     I2_b64 = outfile["Image"]
     img = save_b64_image(I2_b64)
     method = outfile["Process"]
