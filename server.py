@@ -204,7 +204,6 @@ def get_process_image_list(username):
 
     pro_filenames = [user.filenames[i] for i, x in
                      enumerate(user.raw_image) if x is False]
-    print(user.filenames)
     return pro_filenames
 
 
@@ -284,9 +283,7 @@ def get_process():
             Iraw = I["Image"]
             Imat = bytes_to_plot(Iraw, "tiff")
             [I_process, latency] = process_image(Imat, process)
-            [hist_process, bins_process] = Process.plot_his(I_process)
-            histogram = hist_process
-            bins = bins_process
+            [histogram, bins] = Process.plot_his(I_process)
             [m, n] = Process.get_size(I_process)
             s = [m, n]
             # plt.imshow(I_process, interpolation="nearest")
