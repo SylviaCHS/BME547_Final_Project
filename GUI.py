@@ -221,8 +221,8 @@ class GUI:
             self.raw_metrics = client.image_metrics(ID, raw_img_name)
             self.pro_metrics = client.image_metrics(ID, filename)
 
-
-            size = image_size(raw_img_obj)
+            s = self.raw_metrics['size']
+            size = image_size(s)
 
             # display the raw and process image in GUI
             raw_img = ImageTk.PhotoImage(raw_img_obj.resize(size))
@@ -249,19 +249,17 @@ class GUI:
             download_multiple(select_files, savepath, ID, self.saveas.get())
 
 
-def image_size(img_obj):
-    img = np.asarray(im_obj)
-
-
-    l_max = max(w, h)
+def image_size(size):
+    l_max = max(size)
     if l_max > 300:
         num = l_max/300
     else:
         num = 1
-    w = round(w / num)
-    h = round(h / num)
-    size = [w, h]
-    return size
+    print(size, type(size))
+    w = round(size[0] / num)
+    h = round(size[1] / num)
+    new_size = [w, h]
+    return new_size
 
 
 def get_image_pair(filename, ID):
