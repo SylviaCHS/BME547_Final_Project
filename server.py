@@ -21,6 +21,11 @@ app = Flask(__name__)
 def read_data_as_b64(I_bytes):
     """
     Used for converting input data into base64
+
+    Args:
+        I_bytes: image in uint8 bytes
+    Returns:
+        b64_string: image output string in base 64
     """
     I_buf = io.BytesIO(I_bytes)
     b64_bytes = base64.b64encode(I_bytes)
@@ -31,6 +36,12 @@ def read_data_as_b64(I_bytes):
 def save_b64_image(base64_string):
     """
     Saves base64 string as bytes
+
+    Args:
+        base64_string: image output string in base 64
+
+    Returns:
+        image_bytes: image in bytes
     """
     image_bytes = base64.b64decode(base64_string)
     return image_bytes
@@ -39,6 +50,13 @@ def save_b64_image(base64_string):
 def bytes_to_plot(bytes, extension):
     """
     Converts raw TIF format in Mongo to numpy array
+
+    Args:
+        bytes: image in byte
+        extension: file format (always tiff)
+
+    Returns:
+        i: numpy array version of image
     """
     image_buf = io.BytesIO(bytes)
     i = mpimg.imread(image_buf, format=extension)
@@ -48,6 +66,12 @@ def bytes_to_plot(bytes, extension):
 def plot_to_bytes(plot):
     """
     Converts numpy array into raw TIF format for MongoModel
+
+    Args:
+        plot: numpy array version of image
+
+    Returns:
+        data: image in bytes
     """
     img = Image.fromarray(plot, "RGB")
     f = BytesIO()
@@ -58,7 +82,14 @@ def plot_to_bytes(plot):
 
 def convert_file(I, extension):
     """
-    Converts raw bytes of any format into tiff
+    Converts raw bytes of any format into any
+    other format
+
+    Args:
+        I: byte format of image
+        extension: desired output file type
+    Returns:
+        data: byte format in desired file type
     """
     with BytesIO() as f:
         img = Image.open(io.BytesIO(I)).convert("RGB")
@@ -70,6 +101,12 @@ def convert_file(I, extension):
 def verify_newuser(ID):
     """
     Checks existence of username
+
+    Args:
+        ID: Username
+    Returns:
+        x: Boolean value. If x = True, user does
+        not exist in database
     """
     users = User.objects.raw({})
 
@@ -83,6 +120,13 @@ def verify_newuser(ID):
 def verify_newimage(filename, ID):
     """
     Checks existence of filename
+
+    Args:
+        filename: Image name
+        ID: Username
+    Returns:
+        x: Boolean value. If x is true,
+        image does not exist in database
     """
     u = User.objects.raw({"_id": ID}).first()
     x = True
@@ -101,6 +145,13 @@ def verify_newimage(filename, ID):
 def NewUser():
     """
     Post request for new user
+
+    Args:
+        JSON with input:
+        "username": Username
+    Returns:
+        outstr: String verifying user has been saved
+                to database
     """
     r = request.get_json()
     username = r["username"]
@@ -119,6 +170,16 @@ def NewUser():
 def NewImage():
     """
     Post request for new image
+
+    Args:
+        Input json file:
+        "username": username
+        "filename": image file name
+        "rawimage": image as base 64 string
+        "extension": original file type
+    Returns:
+        outstr: String verifying that image
+                has been saved
     """
     r = request.get_json()
     username = str(r["username"])
@@ -155,7 +216,20 @@ def NewImage():
 
 def save_image(user, filename, image_tif, process, latency, size, hist, bins):
     """
-    Function that saves image to Mongo (no calls)
+    Function that saves image to Mongo database
+
+    Args:
+        user: username
+        filename: desired file name in database
+        image_tif: tiff image in byte format
+        process: processing algorithm applied to image
+        latency: time to process image
+        size: image size
+        hist: histogram values of image
+        bins: bin locations of image
+    Returns:
+        outstr: Confirmation that image has been saved
+
     """
     time = datetime.datetime.now()
     Image_Dict = {
@@ -180,7 +254,10 @@ def save_image(user, filename, image_tif, process, latency, size, hist, bins):
 def get_image_list():
     """
     A route to GET a list of processed image name from MongoDB
+    Args:
+        Input json keys: "username"
     Returns:
+        outjson: list of all images the user has stored
     """
     r = request.get_json()
     username = str(r["username"])
@@ -197,8 +274,11 @@ def get_image_list():
 def get_process_image_list(username):
     """
     Get the list of names of processed image
-
+    Args:
+        JSON input: "username"
     Returns:
+        pro_filenames: All files that have been
+                       processed by the user
     """
     user = User.objects.raw({"_id": username}).first()
 
@@ -212,6 +292,17 @@ def get_process_image_list(username):
 def GetImage():
     """
     Requests single image from database
+    Args:
+        Input JSON:
+                "username": Username
+                "filename": name of desired image
+    Returns:
+        outjson: Dictionary with keys
+                 File: filename
+                 Image: Image in b64 tiff format
+                 Process: processing algorithm applied
+        If user/image does not exist, an error message will
+        be returned to the client.
     """
     r = request.get_json()
     username = str(r["username"])
@@ -240,6 +331,12 @@ def GetImage():
 def find_image(filename, username):
     """
     Queries database for image
+    Args:
+        Username: username
+        filename: name of desired image
+    Returns:
+        image: dictionary of image along with
+               all metadata
     """
     user = User.objects.raw({"_id": username}).first()
     idx = user.filenames.index(filename)
@@ -250,6 +347,14 @@ def find_image(filename, username):
 def process_image(iraw, process):  # Test me!
     """
     Processes image as specified by user
+
+    Args:
+        iraw: Image to be processed
+        process: processing method
+
+    Returns:
+        i_process: list with 2 entries: processed image
+                   and time to process image
     """
     i_process = 0
     if process == "Histogram Equalization":
@@ -267,6 +372,15 @@ def process_image(iraw, process):  # Test me!
 def get_process():
     """
     Processes image and saves to database
+
+    Args:
+        Input json:
+        "username": username
+        "filename": name of image to be processed
+        "process": Desired processing algorithm
+
+    Returns:
+        outjson: Confirmation that image was processed
     """
     r = request.get_json()
     t1 = datetime.datetime.now()
@@ -310,6 +424,15 @@ def get_process():
 
 @app.route("/api/user_metrics", methods=["GET"])
 def user_metrics():
+    """
+    Return metrics for given user
+    Args:
+        Input json: "username:: username
+    Returns:
+        outjson: dictionary of all image processing
+        algorithms, times used, and time to execute
+
+    """
     r = request.get_json()
     username = r["username"]
     x = verify_newuser(username)
@@ -322,6 +445,18 @@ def user_metrics():
 
 @app.route("/api/image_metrics", methods=["GET"])
 def image_metrics():
+    """
+    Obtain metrics for a certain image
+
+    Args:
+        Input json:
+            "username": username
+            "filename": name of image
+    Returns:
+        outdict: List of all algorithms with
+                 number of times used and time
+                 to execute
+    """
     r = request.get_json()
     username = r["username"]
     filename = r["filename"]
@@ -345,6 +480,15 @@ def image_metrics():
 
 
 def get_metrics(username):
+    """
+    Searches database for relevant user metrics
+    Args:
+        Username: username
+    Returns:
+        Outdict: List of all algorithms with
+                 times used and mean time to
+                 execute
+    """
     user = User.objects.raw({"_id": username}).first()
     Image_List = user.ImageFile
     his_eq_dict = find_stats("Histogram Equalization", Image_List)
@@ -361,6 +505,20 @@ def get_metrics(username):
 
 
 def find_stats(instr, List):
+    """
+    Finds number of times a specific algorithm
+    has been used by a user
+
+    Args:
+        instr: Processing method
+        List: List of all images from a user
+
+    Returns:
+        info: list with 2 elements:
+              count: number of times algorithm
+                     was used
+              latmean: average time to execute
+    """
     count = 0
     latmat = []
     for i in List:
@@ -378,6 +536,19 @@ def find_stats(instr, List):
 
 @app.route("/api/download_image", methods=["GET"])
 def download_image():
+    """
+    Returns a base 64 string of any file format
+    requested by user
+
+    Args:
+        Input JSON:
+                    "username": username
+                    "filename": name of image in database
+                    "extension": desired file type'
+    Returns:
+        Outstring: Dictionary with one entry
+                   "Image": image in base 64 string
+    """
     r = request.get_json()
     username = r["username"]
     filename = r["filename"]
