@@ -134,7 +134,8 @@ class GUI:
         metrics_btn.grid(column=4, row=9)
 
         self.msg = StringVar()
-        msg_label = Message(root, textvariable=self.msg, relief=RAISED, width=400)
+        msg_label = Message(root, textvariable=self.msg,
+                            relief=RAISED, width=400)
         msg_label.grid(column=0, row=9, columnspan=4)
 
     def display_metrics(self):
@@ -238,11 +239,11 @@ class GUI:
             self.pro_img_label.image = pro_img
 
             # display raw and process histogram in GUI
-            raw_hist = ImageTk.PhotoImage(raw_hist_obj)
+            raw_hist = ImageTk.PhotoImage(raw_hist_obj.resize([385, 450]))
             self.raw_hist_label.configure(image=raw_hist)
             self.raw_hist_label.image = raw_hist
 
-            pro_hist = ImageTk.PhotoImage(pro_hist_obj)
+            pro_hist = ImageTk.PhotoImage(pro_hist_obj.resize([385, 450]))
             self.pro_hist_label.configure(image=pro_hist)
             self.pro_hist_label.image = pro_hist
 

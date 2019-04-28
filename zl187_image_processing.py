@@ -67,6 +67,7 @@ def make_fig(his1, bins1, his2, bins2, his3, bins3):
     plt.plot(bins1, his1)
     plt.plot(bins2, his2)
     plt.plot(bins3, his3)
+    plt.tick_params(labelsize=20)
     plt.tight_layout()
     fig.canvas.draw()
     data = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
@@ -86,6 +87,7 @@ def make_figbw(his1, bins1):
     """
     fig = plt.figure()
     plt.plot(bins1, his1)
+    plt.tick_params(labelsize=20)
     plt.tight_layout()
     fig.canvas.draw()
     data = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
