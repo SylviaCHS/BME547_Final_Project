@@ -134,7 +134,7 @@ class GUI:
         metrics_btn.grid(column=4, row=9)
 
         self.msg = StringVar()
-        msg_label = Message(root, textvariable=self.msg, relief=RAISED)
+        msg_label = Message(root, textvariable=self.msg, relief=RAISED, width=400)
         msg_label.grid(column=0, row=9, columnspan=4)
 
     def display_metrics(self):
@@ -173,11 +173,11 @@ class GUI:
         """
         ID = self.user_name.get()
         new = self.new_factor.get()
-        self.msg = 'Running analysis'
+        self.msg.set('Running analysis')
         # Upload new image
         if new == '1':
-            self.msg = client.post_new_user(ID)
-        self.msg = check_zip_file(self.filepath, ID, self.method.get())
+            self.msg.set(client.post_new_user(ID))
+        self.msg.set(check_zip_file(self.filepath, ID, self.method.get()))
 
     def load_function(self):
         """

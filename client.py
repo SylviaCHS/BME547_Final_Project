@@ -27,7 +27,7 @@ def upload_file(ID, filename, extension, filepathname):
         "extension": extension
     }
     r4 = requests.post("http://127.0.0.1:5000/api/new_image", json=userimage)
-    print(r4,text)
+    print(r4.text)
     return r4.text
 
 
