@@ -143,8 +143,6 @@ class GUI:
     def display_metrics3(self):
         messagebox.showinfo("Processed Image Metrics", self.pro_metrics)
 
-
-
     def import_file(self):
         """
         Open a pop-up window to let user choose file(s)
