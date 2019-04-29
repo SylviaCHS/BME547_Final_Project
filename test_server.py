@@ -122,3 +122,15 @@ def test_plot_to_bytes():
     image_buf = plot_to_bytes(I)
     image_out = bytes_to_plot(image_buf, 'tiff')
     assert image_out.all() == I.all()
+
+
+def test_convert_file():
+    from server import plot_to_bytes
+    from server import bytes_to_plot
+    from server import convert_file
+    I1 = mpimg.imread("KimandRev copy.tiff")
+    I2 = mpimg.imread("KimandRev copy.png")
+    image_bytes = plot_to_bytes(I1)
+    outfile = convert_file(image_bytes, "PNG")
+    ans = bytes_to_plot(outfile, "PNG")
+    assert ans.all() == I2.all()
