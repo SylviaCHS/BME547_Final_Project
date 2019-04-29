@@ -478,9 +478,10 @@ def image_metrics():
                       "latency": I["Latency"],
                       "process": I["Process"]
                       }
+            code = 200
         else:
             outdict = ["This image does not exist"]
-            code = 200
+            code = 400
     else:
         outdict = ["User does not exist"]
         code = 400
