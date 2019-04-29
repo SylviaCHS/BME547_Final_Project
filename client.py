@@ -176,7 +176,7 @@ def get_histogram(ID, filename):
         filename (str): filename
 
     Returns:
-        i (nparray
+        i (nparray) : array of histogram image
 
     """
     djson = {
@@ -191,6 +191,18 @@ def get_histogram(ID, filename):
 
 
 def read_file_as_b64(image_path):
+    """
+    Encode image file or image from zip archive to base64
+
+    Args:
+        image_path (bytes or str): if from a zip archive, it is an image in
+                                   bytes;
+                                   if from local directory, it should be a
+                                   string specifying the filepath
+
+    Returns:
+        b64_string (str): encoded image file ready to be sent to server
+    """
     # If input is from zip archive, it will be in bytes
     if type(image_path) is bytes:
         b64_bytes = base64.b64encode(image_path)
@@ -203,6 +215,16 @@ def read_file_as_b64(image_path):
 
 
 def save_b64_image(base64_string):
+    """
+        Saves base64 string as bytes, then covert it back to an image array in
+        tiff format
+
+        Args:
+            base64_string: image output string in base 64
+
+        Returns:
+            i (nparray): image array in tiff
+    """
     image_bytes = base64.b64decode(base64_string)
     image_buf = io.BytesIO(image_bytes)
     i = mpimg.imread(image_buf, format='tiff')
