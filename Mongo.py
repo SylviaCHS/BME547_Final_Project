@@ -2,11 +2,11 @@ from flask import Flask
 from pymodm import connect
 from pymodm import MongoModel, fields
 app = Flask(__name__)
-# connect("mongodb+srv://Sylvia:Ks0l8NyUGEBzhZ2Y@bme547-zlm8s.mongodb."
-#        "net/test?retryWrites=true")
+connect("mongodb+srv://Sylvia:Ks0l8NyUGEBzhZ2Y@bme547-zlm8s.mongodb."
+        "net/test?retryWrites=true")
 
-connect("mongodb+srv://sylvia:123@bme547-wezm4.mongodb.net/"
-        "test?retryWrites=true")
+# connect("mongodb+srv://sylvia:123@bme547-wezm4.mongodb.net/"
+# "test?retryWrites=true")
 
 
 class User(MongoModel):

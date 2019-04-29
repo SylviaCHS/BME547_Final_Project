@@ -300,9 +300,12 @@ class GUI:
                 # Save file to a designated folder
                 full_name = savepath + '/' + filename + '.' + self.saveas.get()
                 pro_img_obj.save(full_name)
+                self.msg2.set('Image is saved successfully')
 
         else:
             download_multiple(select_files, savepath, ID, self.saveas.get())
+            self.msg2.set('Images are saved successfully '
+                          'in "processed_images.zip"')
 
 
 def image_size(size):
@@ -378,7 +381,7 @@ def check_r_type(r):
     Check if the output from server is a string of error message
     Raise error if it is string.
     It should be a dictionary.
-    
+
     Args:
         r (str): Message from server
     """
@@ -560,8 +563,7 @@ def download_multiple(select_files, savepath, id, ext):
     with zipfile.ZipFile(savepath + '/processed_images.zip', mode='w') as zf:
 
         for file in select_files:
-            pro_img_arr, _, _, _, _ = get_image_pair(file, id)
-            pro_img = Image.fromarray(pro_img_arr)
+            pro_img, _, _, _, _ = get_image_pair(file, id)
             output = io.BytesIO()
             pro_img.save(output, format=ext)
             filename = file + '.' + ext
