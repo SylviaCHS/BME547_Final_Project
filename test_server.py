@@ -83,3 +83,11 @@ def test_verify_newuser2():
     users = ["Kim", "Sylvia", "Tiffany"]
     x = verify_newuser(users, "Bob")
     assert x is True
+
+
+def test_read_data_as_b64():
+    from server import read_data_as_b64
+    a = bytes([1, 2, 3, 4])
+    b64_string = read_data_as_b64(a)
+    expected = 'AQIDBA=='
+    assert b64_string == expected

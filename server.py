@@ -619,7 +619,6 @@ def get_histogram():
     username = r["username"]
     filename = r["filename"]
     u1 = User.objects.raw({})
-    #users = u1.UserID
     users = []
     for i in u1:
         users.append(i.UserID)
