@@ -50,7 +50,7 @@ class GUI:
 
         run_btn = ttk.Button(root, text='Run Analysis',
                              command=lambda: self.run_function())
-        run_btn.grid(column=0, row=3, columnspan=4)
+        run_btn.grid(column=1, row=3, columnspan=2)
 
         # Separate Analysis and Display
         ttk.Separator(root, orient=HORIZONTAL).grid(column=0, row=4,
@@ -102,8 +102,8 @@ class GUI:
         self.pro_hist_label.grid(column=4, row=6, columnspan=1)
 
         # Display image metrics
-        self.raw_metrics = {}
-        self.pro_metrics = {}
+        self.raw_metrics = {'Error': 'Please load a image first'}
+        self.pro_metrics = {'Error': 'Please load a image first'}
         im_metrics_btn = ttk.Button(root,
                                     text="Display Original Image Metrics",
                                     command=lambda: self.display_metrics2())
@@ -137,7 +137,12 @@ class GUI:
         self.msg = StringVar()
         msg_label = Message(root, textvariable=self.msg,
                             relief=RAISED, width=400)
-        msg_label.grid(column=0, row=9, columnspan=4)
+        msg_label.grid(column=3, row=3, columnspan=2)
+
+        self.msg2 = StringVar()
+        msg_label2 = Message(root, textvariable=self.msg2,
+                             relief=RAISED, width=400)
+        msg_label2.grid(column=0, row=9, columnspan=4)
 
     def display_metrics(self):
         metrics = client.user_metrics(self.user_name.get())
@@ -173,13 +178,27 @@ class GUI:
               method and store in mongoDB
 
         """
-        ID = self.user_name.get()
-        new = self.new_factor.get()
-        self.msg.set('Running analysis')
-        # Upload new image
-        if new == '1':
-            self.msg.set(client.post_new_user(ID))
-        self.msg.set(check_zip_file(self.filepath, ID, self.method.get()))
+        try:
+            self.filepath
+        except AttributeError:
+            self.msg.set('Error: Please select file(s) to import')
+        else:
+            ID = self.user_name.get()
+            new = self.new_factor.get()
+            # Upload new image
+            if new == '1':
+                try:
+                    self.msg.set(client.post_new_user(ID))
+                    check_user(self.msg.get())
+                except ValueError:
+                    pass
+                else:
+                    self.msg.set(run_analysis(self.filepath, ID,
+                                              self.method.get()))
+
+            else:
+                self.msg.set(run_analysis(self.filepath, ID,
+                                          self.method.get()))
 
     def load_function(self):
         """
@@ -206,22 +225,27 @@ class GUI:
         Returns:
 
         """
+        # Ask user for directory and user ID
+        savepath = filedialog.askdirectory()
+        ID = self.user_name.get()
+
+        self.msg2.set('Saving files to the designated folder')
+
         # Get selected filenames
         index = self.name_list.curselection()
         select_files = [self.image_names[i] for i in index]
 
-        # Ask user for directory and user ID
-        savepath = filedialog.askdirectory()
-        ID = self.user_name.get()
-        self.msg.set('Saving files to the designated folder')
         single = check_multi_single(select_files)
 
         if single is True:
 
-            filename = select_files[0]  # Temporary
+            filename = select_files[0]
             try:
                 pro_img_obj, raw_img_obj, raw_img_name, \
                     pro_hist_obj, raw_hist_obj = get_image_pair(filename, ID)
+            except ValueError:
+                self.msg2.set(get_image_pair(filename, ID))
+            else:
                 # Get Image metrics
                 self.raw_metrics = client.image_metrics(ID, raw_img_name)
                 self.pro_metrics = client.image_metrics(ID, filename)
@@ -250,9 +274,7 @@ class GUI:
                 # Save file to a designated folder
                 full_name = savepath + '/' + filename + '.' + self.saveas.get()
                 pro_img_obj.save(full_name)
-            except ValueError:
-                self.msg.set(get_image_pair(filename, ID))
-                pass
+
         else:
             download_multiple(select_files, savepath, ID, self.saveas.get())
 
@@ -263,7 +285,6 @@ def image_size(size):
         num = l_max/300
     else:
         num = 1
-    print(size, type(size))
     w = round(size[0] / num)
     h = round(size[1] / num)
     new_size = [w, h]
@@ -299,7 +320,6 @@ def get_image_pair(filename, ID):
         return pro_img, raw_img, raw_img_name, pro_hist, raw_hist
 
     except TypeError:
-        print(r)
         return r
 
 
@@ -321,7 +341,7 @@ def get_file_name(filepath):  # need pytest
 
 def check_multi_single(filenames):
     """
-    Check how many files are chosen
+    Check if multiple or single file is chosen.
 
     Args:
         filenames (list): A list of all the filepaths or string of
@@ -340,13 +360,12 @@ def check_multi_single(filenames):
     return single
 
 
-def check_zip_file(filepath, ID, method):
+def run_analysis(filepath, ID, method):
     filename, extension = get_file_name(filepath[0])
     if extension == '.zip':
         msg = run_zip_analysis(filepath, ID, method)
     else:
-        run_analysis(filepath, ID, method)
-        msg = 'running analysis on the images chosen'
+        msg = run_images_analysis(filepath, ID, method)
     return msg
 
 
@@ -364,13 +383,31 @@ def run_zip_analysis(filepath, ID, method):
                 # Save raw image to database
                 msg = client.upload_file(ID, filename,
                                          extension, fh.getvalue())
-
-                # Request to process image
-                client.process_image(ID, filename, method)
+                err, msg = check_msg(msg)
+                if err is False:  # if no error in uploading image
+                    # Request to process image
+                    client.process_image(ID, filename, method)
     return msg
 
 
-def run_analysis(filepath, ID, method):
+def check_msg(msg):
+    err = bool(0)
+    if 'Error' in msg:
+        err = bool(1)
+    elif "Warning" in msg:
+        msg = 'Success! Warning: Image already exists. ' \
+              'Processing ran on existing image'
+    else:
+        msg = 'Image saved successfully'
+    return err, msg
+
+
+def check_user(msg):
+    if "Error" in msg:
+        raise ValueError('User already exists.')
+
+
+def run_images_analysis(filepath, ID, method):
     """
     Upload image(s) and run the required analysis
 
@@ -383,14 +420,22 @@ def run_analysis(filepath, ID, method):
 
     """
     for path in filepath:
+        try:
+            Image.open(path)
+        except IOError:
+            msg = 'Please import images files, or just a single zip archive'
+        else:
+            filename, extension = get_file_name(path)
 
-        filename, extension = get_file_name(path)
+            # Save raw image to database
+            msg = client.upload_file(ID, filename, extension, path)
 
-        # Save raw image to database
-        client.upload_file(ID, filename, extension, path)
+            err, msg = check_msg(msg)
 
-        # Request to process image
-        client.process_image(ID, filename, method)
+            if err is False:  # if no error in uploading image
+                # Request to process image
+                client.process_image(ID, filename, method)
+        return msg
 
 
 def download_multiple(select_files, savepath, id, ext):
