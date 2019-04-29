@@ -378,7 +378,7 @@ def check_r_type(r):
     Check if the output from server is a string of error message
     Raise error if it is string.
     It should be a dictionary.
-    
+
     Args:
         r (str): Message from server
     """
