@@ -113,3 +113,12 @@ def test_save_b64_image():
     data = 'AQIDBA=='
     b64_bytes = save_b64_image(data)
     assert b64_bytes == expected
+
+
+def test_plot_to_bytes():
+    from server import plot_to_bytes
+    from server import bytes_to_plot
+    I = mpimg.imread("KimandRev copy.tiff")
+    image_buf = plot_to_bytes(I)
+    image_out = bytes_to_plot(image_buf, 'tiff')
+    assert image_out.all() == I.all()
