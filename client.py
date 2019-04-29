@@ -223,8 +223,9 @@ def save_b64_image(base64_string):
             base64_string: image output string in base 64
 
         Returns:
-            i (nparray): image array in tiff
+            i (nparray): image array
     """
+
     image_bytes = base64.b64decode(base64_string)
     image_buf = io.BytesIO(image_bytes)
     i = mpimg.imread(image_buf, format='tiff')

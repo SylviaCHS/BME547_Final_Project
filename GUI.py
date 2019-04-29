@@ -349,21 +349,34 @@ def get_image_pair(filename, ID):
     r = client.get_image_file(ID, filename)
 
     try:
+        check_r_type(r)
+    except TypeError:
+        return r
+    else:
         pro_img_arr, method = client.get_image(r)
         pro_img = Image.fromarray(pro_img_arr)
         raw_img_name = filename.replace('_' + method, "")
 
-        raw_img_arr, _ = client.get_image(ID, raw_img_name)
-        raw_img = Image.fromarray(raw_img_arr)
+        r_raw = client.get_image_file(ID, raw_img_name)
 
-        pro_hist = Image.fromarray(client.get_histogram(ID, filename))
+        try:
+            check_r_type(r)
+        except TypeError:
+            return r
+        else:
+            raw_img_arr, _ = client.get_image(r_raw)
+            raw_img = Image.fromarray(raw_img_arr)
 
-        raw_hist = Image.fromarray(client.get_histogram(ID, raw_img_name))
-        return pro_img, raw_img, raw_img_name, pro_hist, raw_hist
+            pro_hist = Image.fromarray(client.get_histogram(ID, filename))
 
-    except TypeError:
-        return r
+            raw_hist = Image.fromarray(client.get_histogram(ID, raw_img_name))
+            return pro_img, raw_img, raw_img_name, pro_hist, raw_hist
 
+
+
+def check_r_type(r):
+    if type(r) is str:
+        raise TypeError('Get Error message.')
 
 def get_file_name(filepath):  # need pytest
     """
