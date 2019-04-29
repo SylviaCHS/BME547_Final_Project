@@ -15,3 +15,4 @@ The function used from `scikit-image` is `skimage.util.invert()`. This might be 
 
 ## Sphinx docstring
 All the docstrings of functions can be found in folder `html`. Feel free to check them.
+![pic1](https://github.com/SylviaCHS/BME547_Final_Project/blob/zl187/update_readme/images/pic1.PNG)
