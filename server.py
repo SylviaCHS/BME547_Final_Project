@@ -416,11 +416,14 @@ def get_process():
             user.raw_image.append(bool(0))
             user.save()
             outjson = "Image is processed successfully"
+            code = 200
         else:
             outjson = "Image is processed successfully"
+            code = 200
     else:
         outjson = "Invalid data entry"
-    return jsonify(outjson)
+        code = 400
+    return jsonify(outjson), code
 
 
 @app.route("/api/user_metrics", methods=["GET"])
@@ -439,9 +442,11 @@ def user_metrics():
     x = verify_newuser(username)
     if x is False:
         outjson = get_metrics(username)
+        code = 200
     else:
         outjson = "User does not exist"
-    return jsonify(outjson)
+        code = 400
+    return jsonify(outjson), code
 
 
 @app.route("/api/image_metrics", methods=["GET"])
@@ -475,9 +480,11 @@ def image_metrics():
                       }
         else:
             outdict = ["This image does not exist"]
+            code = 200
     else:
         outdict = ["User does not exist"]
-    return jsonify(outdict)
+        code = 400
+    return jsonify(outdict), code
 
 
 def get_metrics(username):
@@ -564,11 +571,14 @@ def download_image():
             file = I["Image"]
             outfile = convert_file(file, extension)
             outstring = {"Image": read_data_as_b64(outfile)}
+            code = 200
         else:
             outstring = "Image does not exist"
+            code = 400
     else:
         outstring = "User does not exist"
-    return jsonify(outstring)
+        code = 400
+    return jsonify(outstring), code
 
 
 @app.route("/api/get_histogram", methods=["GET"])
@@ -592,11 +602,14 @@ def get_histogram():
             I = find_image(filename, username)
             file = I["Histogram"]
             outstring = {"Histogram": read_data_as_b64(file)}
+            code = 200
         else:
             outstring = "Image does not exist"
+            code = 400
     else:
         outstring = "User does not exist"
-    return jsonify(outstring)
+        code = 400
+    return jsonify(outstring), code
 
 
 if __name__ == '__main__':
