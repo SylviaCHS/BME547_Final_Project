@@ -24,6 +24,11 @@ vcm-9030.vm.duke.edu:5000
 ```
 Note: If want to run it locally, please refer to the other release from branch `local_server`
 
+### View Our Instruction Video!!
+
+For instruction, please watch our instruction video under the git repo master branch called "FinalInstructionVideo.mp4".
+It seems slow but we promise it is faster now!
+
 ### Upload Image(s) or A Zipfile to Run Analysis on Server
 - First, user needs to type a user name. If a new user, please check the box `New User`. If the user name already exists, you would get an error on the right of the `run analysis`, so please choose another name. If a new user forget to check the box, an error message will also be displayed.
 - Then, user needs to click import file. User can choose one or more image file(s) or one zip archive to import. The program accepts most image types. While other types of file or more than one zip files are chosen, an error will be displayed.
