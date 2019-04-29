@@ -117,7 +117,7 @@ def verify_newuser(users, ID):
     return x
 
 
-def verify_newimage(filename, ID):
+def verify_newimage(filename, files):
     """
     Checks existence of filename
 
@@ -128,9 +128,8 @@ def verify_newimage(filename, ID):
         x: Boolean value. If x is true,
         image does not exist in database
     """
-    u = User.objects.raw({"_id": ID}).first()
     x = True
-    cursor = u.filenames
+    cursor = files
     if cursor == []:
         x = True
 
@@ -199,7 +198,9 @@ def NewImage():
     y = verify_newuser(users, username)
 
     if y is False:
-        x = verify_newimage(filename, username)
+        u = User.objects.raw({"_id": username}).first()
+        files = u.filenames
+        x = verify_newimage(filename, files)
 
         if x is True:
             user = User.objects.raw({"_id": username}).first()
@@ -328,10 +329,12 @@ def GetImage():
     users = []
     for i in u1:
         users.append(i.UserID)
-    x = verify_newuser(users, username)
+        x = verify_newuser(users, username)
 
     if x is False:
-        y = verify_newimage(filename, username)
+        u = User.objects.raw({"_id": username}).first()
+        files = u.filenames
+        y = verify_newimage(filename, files)
         if y is False:
             user = User.objects.raw({"_id": username}).first()
             image = find_image(filename, username)
@@ -411,9 +414,11 @@ def get_process():
     username = str(r["username"])
     process = str(r["process"])
     newfilename = filename+"_"+process
-    y = verify_newimage(filename, username)
+    u = User.objects.raw({"_id": username}).first()
+    files = u.filenames
+    y = verify_newimage(filename, files)
     if y is False:
-        x = verify_newimage(newfilename, username)
+        x = verify_newimage(newfilename, files)
         if x is True:
             user = User.objects.raw({"_id": username}).first()
             List = user.ImageFile
@@ -492,8 +497,9 @@ def image_metrics():
     # users = u1.UserID
     x = verify_newuser(users, username)
     if x is False:
-        user = User.objects.raw({"_id": username}).first()
-        y = verify_newimage(filename, username)
+        u = User.objects.raw({"_id": username}).first()
+        files = u.filenames
+        y = verify_newimage(filename, files)
         if y is False:
             I = find_image(filename, username)
             outdict = {
@@ -591,7 +597,9 @@ def download_image():
         users.append(i.UserID)
     x = verify_newuser(users, username)
     if x is False:
-        y = verify_newimage(filename, username)
+        u = User.objects.raw({"_id": username}).first()
+        files = u.filenames
+        y = verify_newimage(filename, files)
         if y is False:
             I = find_image(filename, username)
             file = I["Image"]
@@ -624,7 +632,9 @@ def get_histogram():
         users.append(i.UserID)
     x = verify_newuser(users, username)
     if x is False:
-        y = verify_newimage(filename, username)
+        u = User.objects.raw({"_id": username}).first()
+        files = u.filenames
+        y = verify_newimage(filename, files)
         if y is False:
             I = find_image(filename, username)
             file = I["Histogram"]

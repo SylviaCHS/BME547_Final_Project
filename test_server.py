@@ -85,6 +85,20 @@ def test_verify_newuser2():
     assert x is True
 
 
+def test_verify_newimage1():
+    from server import verify_newimage
+    files = ["A", "B", "C", "D"]
+    x = verify_newimage("A", files)
+    assert x is False
+
+
+def test_verify_newimage2():
+    from server import verify_newimage
+    files = ["A", "B", "C", "D"]
+    x = verify_newimage("E", files)
+    assert x is True
+
+
 def test_read_data_as_b64():
     from server import read_data_as_b64
     a = bytes([1, 2, 3, 4])
