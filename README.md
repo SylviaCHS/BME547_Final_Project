@@ -26,7 +26,7 @@ Note: If want to run it locally, please refer to the other release from branch `
 
 ### View Our Instruction Video!!
 
-For instruction, please watch our instruction video under the git repo master branch called "FinalInstructionVideo.mp4".
+For instruction, please watch our instruction video under the git repo master branch called `FinalInstructionVideo.mp4`.
 It seems slow but we promise it is faster now!
 
 ### Upload Image(s) or A Zipfile to Run Analysis on Server
