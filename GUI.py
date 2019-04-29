@@ -7,7 +7,6 @@ import client
 from tkinter import filedialog
 import zipfile
 import io
-import requests
 
 
 class GUI:
@@ -145,13 +144,36 @@ class GUI:
         msg_label2.grid(column=0, row=9, columnspan=4)
 
     def display_metrics(self):
+        """
+        Callback function for metrics_btn
+        A window will pop-up to display the user metadata of previous user
+        actions / metrics including:
+         - How many times has a user run each process
+         - latency for running different processing
+        """
         metrics = client.user_metrics(self.user_name.get())
         messagebox.showinfo("Metrics", metrics)
 
     def display_metrics2(self):
+        """
+           Callback function for im_metrics_btn1
+           A window will pop-up to display the original image metadata
+           including:
+            Timestamp when uploaded
+            Time to process the image(s)
+            Image size (e.g., X x Y pixels)
+        """
         messagebox.showinfo("Original Image Metrics", self.raw_metrics)
 
     def display_metrics3(self):
+        """
+           Callback function for im_metrics_btn2
+           A window will pop-up to display the processed image metadata
+           including:
+            Timestamp when uploaded
+            Time to process the image(s)
+            Image size (e.g., X x Y pixels)
+        """
         messagebox.showinfo("Processed Image Metrics", self.pro_metrics)
 
     def import_file(self):
@@ -207,9 +229,6 @@ class GUI:
         or more images to download. If only one image is chosen the resulted
         plot will be displayed in the GUI. If multiple file is chosen, the
         files will be zip to a zip archive and save to a designated path.
-
-        Returns:
-
         """
         self.image_names = client.get_image_list(self.user_name.get())
         # clear listbox
@@ -220,10 +239,17 @@ class GUI:
 
     def download_function(self):
         """
-        Control the download button
+        Callback function that controls the download button
 
-        Returns:
-
+        When clicked, it would:
+            - Ask user for the directory they want to save the file
+            - If a single image is chosen, the original and processed image as
+              as well as the before and after histogram will be displayed in
+              GUI. An image will be also saved to the designated folder
+            - If multiple images are chosen, NO images will be displayed. A
+              zip archive of these images will be save to the designated
+              folder.
+            - User could choose the file type they want, default is JPEG.
         """
         # Ask user for directory and user ID
         savepath = filedialog.askdirectory()
@@ -280,6 +306,19 @@ class GUI:
 
 
 def image_size(size):
+    """
+    Determine the image size of the images to be displayed in GUI
+    The original width to height ratio will be preserved.
+
+    Max width/height is set to be 300, and the other dimension will be
+    adjusted accordingly.
+
+    Args:
+        size (list): Original image size
+
+    Returns:
+        new_size (list): New image size suitable for GUI
+    """
     l_max = max(size)
     if l_max > 300:
         num = l_max/300
@@ -293,34 +332,58 @@ def image_size(size):
 
 def get_image_pair(filename, ID):
     """
+    Communicate with server and database to get original and processed images,
+    pre and post-processing histogram.
 
     Args:
         filename (str): filename of processed image
         ID (str): user name
 
     Returns:
-        pro_img (nparray): post-processed image
-        raw_img (nparray): original image
+        pro_img (image object): post-processed image
+        raw_img (image object): original image
         raw_img_name (str): original image name
-
+        pro_hist (image object): histogram of original image
+        raw_hist (image object): histogram of processed image
     """
     r = client.get_image_file(ID, filename)
 
     try:
+        check_r_type(r)
+    except TypeError:
+        return r
+    else:
         pro_img_arr, method = client.get_image(r)
         pro_img = Image.fromarray(pro_img_arr)
         raw_img_name = filename.replace('_' + method, "")
 
-        raw_img_arr, _ = client.get_image(ID, raw_img_name)
-        raw_img = Image.fromarray(raw_img_arr)
+        r_raw = client.get_image_file(ID, raw_img_name)
 
-        pro_hist = Image.fromarray(client.get_histogram(ID, filename))
+        try:
+            check_r_type(r)
+        except TypeError:
+            return r
+        else:
+            raw_img_arr, _ = client.get_image(r_raw)
+            raw_img = Image.fromarray(raw_img_arr)
 
-        raw_hist = Image.fromarray(client.get_histogram(ID, raw_img_name))
-        return pro_img, raw_img, raw_img_name, pro_hist, raw_hist
+            pro_hist = Image.fromarray(client.get_histogram(ID, filename))
 
-    except TypeError:
-        return r
+            raw_hist = Image.fromarray(client.get_histogram(ID, raw_img_name))
+            return pro_img, raw_img, raw_img_name, pro_hist, raw_hist
+
+
+def check_r_type(r):
+    """
+    Check if the output from server is a string of error message
+    Raise error if it is string.
+    It should be a dictionary.
+    
+    Args:
+        r (str): Message from server
+    """
+    if type(r) is str:
+        raise TypeError('Get Error message.')
 
 
 def get_file_name(filepath):  # need pytest
@@ -328,11 +391,11 @@ def get_file_name(filepath):  # need pytest
     Extract filename and extension from filepath
 
     Args:
-        filepath (str):  filepath of the image
+        filepath (str):  full filepath of the image including filename and ext
 
     Returns:
         filename (str): filename without path and extension
-        extension (str): image type
+        extension (str): image type, ex. '.png'
 
     """
     filename, extension = os.path.splitext(filepath.split('/')[-1])
@@ -350,7 +413,6 @@ def check_multi_single(filenames):
     Returns:
         single (bool): Return whether it is a single file (True)
                        or multiple files (False)
-
     """
     num = len(filenames)
     if num == 1:
@@ -361,6 +423,19 @@ def check_multi_single(filenames):
 
 
 def run_analysis(filepath, ID, method):
+    """
+    Call other function to run analysis and upload the results to the database
+    It can both accept one single .zip file or one/multiple image file(s)
+    Args:
+        filepath (tuple): A tuple of filepath(s)
+        ID (str): user name
+        method (str): Required processing method
+
+    Returns:
+        msg (str): Message informing the user if the program is running
+                    properly or there is an error or warning.
+
+    """
     filename, extension = get_file_name(filepath[0])
     if extension == '.zip':
         msg = run_zip_analysis(filepath, ID, method)
@@ -370,6 +445,18 @@ def run_analysis(filepath, ID, method):
 
 
 def run_zip_analysis(filepath, ID, method):
+    """
+    Run image analysis for zip archive
+
+    Args:
+        filepath (str): full filepath with filename of the zip archive
+        ID (str): user name
+        method (str): processing method
+
+    Returns:
+        msg (str):  Message informing the user if the program is running
+                    properly or there is an error or warning.
+    """
     with zipfile.ZipFile(filepath[0]) as zf:
         for entry in zf.namelist():
             if not entry.startswith("__"):  # Get rid hidden files in zip
@@ -391,6 +478,18 @@ def run_zip_analysis(filepath, ID, method):
 
 
 def check_msg(msg):
+    """
+    Check if message contains Error or Warning for run_analysis functions.
+
+    Args:
+        msg (str): Message from server/client code
+
+    Returns:
+        err (bool): True for there is an error
+        msg (str): Message informing the user if the program is running
+                    properly or there is an error or warning.
+
+    """
     err = bool(0)
     if 'Error' in msg:
         err = bool(1)
@@ -403,13 +502,20 @@ def check_msg(msg):
 
 
 def check_user(msg):
+    """
+    Check if message contains Error for get new_user_id function.
+    Raise a ValueError if message contains "Error"
+    Args:
+        msg (str): Message from server code
+    """
     if "Error" in msg:
         raise ValueError('User already exists.')
 
 
 def run_images_analysis(filepath, ID, method):
     """
-    Upload image(s) and run the required analysis
+    Upload image(s) and run the required analysis for multiple or single image
+    file(s)
 
     Args:
         filepath (str): filepath of the image including filename
@@ -417,6 +523,8 @@ def run_images_analysis(filepath, ID, method):
         method (str): user specified image processing method
 
     Returns:
+        msg (str): Message informing the user if the program is running
+                    properly or there is an error or warning.
 
     """
     for path in filepath:
