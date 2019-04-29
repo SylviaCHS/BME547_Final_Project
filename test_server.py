@@ -118,7 +118,7 @@ def test_save_b64_image():
 def test_plot_to_bytes():
     from server import plot_to_bytes
     from server import bytes_to_plot
-    I = mpimg.imread("KimandRevcopy.tiff")
+    I = mpimg.imread("KimAndRevcopy.tiff")
     image_buf = plot_to_bytes(I)
     image_out = bytes_to_plot(image_buf, 'tiff')
     assert image_out.all() == I.all()
@@ -128,8 +128,8 @@ def test_convert_file():
     from server import plot_to_bytes
     from server import bytes_to_plot
     from server import convert_file
-    I1 = mpimg.imread("KimandRevcopy.tiff")
-    I2 = mpimg.imread("KimandRevcopy.png")
+    I1 = mpimg.imread("KimAndRevcopy.tiff")
+    I2 = mpimg.imread("KimAndRevcopy.png")
     image_bytes = plot_to_bytes(I1)
     outfile = convert_file(image_bytes, "PNG")
     ans = bytes_to_plot(outfile, "PNG")
