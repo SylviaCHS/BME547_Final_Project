@@ -105,3 +105,11 @@ def test_read_data_as_b64():
     b64_string = read_data_as_b64(a)
     expected = 'AQIDBA=='
     assert b64_string == expected
+
+
+def test_save_b64_image():
+    from server import save_b64_image
+    expected = bytes([1, 2, 3, 4])
+    data = 'AQIDBA=='
+    b64_bytes = save_b64_image(data)
+    assert b64_bytes == expected
