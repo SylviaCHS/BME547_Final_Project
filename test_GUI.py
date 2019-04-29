@@ -35,6 +35,32 @@ def test_check_multi_single(filenames, expected):
     assert single == expected
 
 
+@pytest.mark.parametrize("msg, expected", [
+        ('there is an Error', [bool(1), 'there is an Error']),
+        ('there is a Warning',
+         [bool(0), 'Success! Warning: Image already exists.'
+          'Processing ran on existing image']),
+        ('everythin is fine', [bool(0), 'Image saved successfully'])
+         ])
+def test_check_msg1(msg, expected):
+    from GUI import check_msg
+    err, msg = check_msg(msg)
+    assert err == expected[0]
+
+
+@pytest.mark.parametrize("msg, expected", [
+        ('there is an Error', [bool(1), 'there is an Error']),
+        ('there is a Warning',
+         [bool(0), 'Success! Warning: Image already exists. '
+          'Processing ran on existing image']),
+        ('everythin is fine', [bool(0), 'Image saved successfully'])
+         ])
+def test_check_msg2(msg, expected):
+    from GUI import check_msg
+    err, msg = check_msg(msg)
+    assert msg == expected[1]
+
+
 @pytest.mark.parametrize("test_list", ['sks,', '232kdkf', 'b329dc'])
 def test_check_data(test_list):
     from GUI import check_r_type
