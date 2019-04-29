@@ -12,3 +12,6 @@ The function used from `scikit-image` is `skimage.exposure.adjust_log()`. For so
 The function used from `scikit-image` is `skimage.util.invert()`. This might be the function that can generate the most obvious change. What it's doing is something like turn white into black or turn black into white.
 
 *More details about the functions used from `scikit-image` can be found on their official webpage: https://scikit-image.org/*
+
+## Sphinx docstring
+All the docstrings of functions can be found in folder `html`. Feel free to check them.
