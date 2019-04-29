@@ -1,0 +1,7 @@
+Mongo module
+============
+
+.. automodule:: Mongo
+    :members:
+    :undoc-members:
+    :show-inheritance:

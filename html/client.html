@@ -1,0 +1,336 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>client module &#8212; BME547_Final_Project 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="GUI module" href="GUI.html" />
+    <link rel="prev" title="Welcome to BME547_Final_Project’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-client">
+<span id="client-module"></span><h1>client module<a class="headerlink" href="#module-client" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="client.get_histogram">
+<code class="descclassname">client.</code><code class="descname">get_histogram</code><span class="sig-paren">(</span><em>ID</em>, <em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#client.get_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>GET request to get histogram image from server/database
+:param ID: user name
+:type ID: str
+:param filename: filename
+:type filename: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>array of histogram image</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>i (nparray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="client.get_image">
+<code class="descclassname">client.</code><code class="descname">get_image</code><span class="sig-paren">(</span><em>outfile</em><span class="sig-paren">)</span><a class="headerlink" href="#client.get_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode images to numpy arrary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>outfile</strong> (<em>dict</em>) – Dictionary with keys
+File: filename
+Image: Image in b64 tiff format
+Process: processing algorithm applied</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Decoded image from server
+method (str): Method used to process this image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>img (nparray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="client.get_image_file">
+<code class="descclassname">client.</code><code class="descname">get_image_file</code><span class="sig-paren">(</span><em>ID</em>, <em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#client.get_image_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get image file
+:param ID: user name
+:type ID: str
+:param filename: file name
+:type filename: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Dictionary with keys</dt><dd><p>File: filename
+Image: Image in b64 tiff format
+Process: processing algorithm applied</p>
+</dd>
+</dl>
+<p>If user/image does not exist, an error message will
+be returned to the client.</p>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>r6.json()(dict or str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="client.get_image_list">
+<code class="descclassname">client.</code><code class="descname">get_image_list</code><span class="sig-paren">(</span><em>username</em><span class="sig-paren">)</span><a class="headerlink" href="#client.get_image_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get list of processed image names</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>username</strong> (<em>str</em>) – user name</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of processed image names or error message</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>outfile (list or str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="client.image_metrics">
+<code class="descclassname">client.</code><code class="descname">image_metrics</code><span class="sig-paren">(</span><em>ID</em>, <em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#client.image_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>GET image metrics from server
+:param ID: user name
+:type ID: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Dictionary containing the image metrics</dt><dd><dl class="simple">
+<dt>example: outdict = {</dt><dd><p>“timestamp”: …,
+“size”: [100, 100],
+“latency”: 1,
+“process”: ‘Reverse Video’}</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>r7.json() (dict)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="client.post_new_user">
+<code class="descclassname">client.</code><code class="descname">post_new_user</code><span class="sig-paren">(</span><em>ID</em><span class="sig-paren">)</span><a class="headerlink" href="#client.post_new_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>POST request to save new user name to MongoDB</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ID</strong> (<em>str</em>) – user name</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="client.process_image">
+<code class="descclassname">client.</code><code class="descname">process_image</code><span class="sig-paren">(</span><em>ID</em>, <em>filename</em>, <em>method</em><span class="sig-paren">)</span><a class="headerlink" href="#client.process_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>POST request the user to process the image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ID</strong> (<em>str</em>) – user name</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – filename that should exist in database</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – processing method</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Confirmation that image was processed or error message</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>r6.json() (str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="client.read_file_as_b64">
+<code class="descclassname">client.</code><code class="descname">read_file_as_b64</code><span class="sig-paren">(</span><em>image_path</em><span class="sig-paren">)</span><a class="headerlink" href="#client.read_file_as_b64" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode image file or image from zip archive to base64</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image_path</strong> (<em>bytes</em><em> or </em><em>str</em>) – if from a zip archive, it is an image in
+bytes;
+if from local directory, it should be a
+string specifying the filepath</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>encoded image file ready to be sent to server</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>b64_string (str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="client.save_b64_image">
+<code class="descclassname">client.</code><code class="descname">save_b64_image</code><span class="sig-paren">(</span><em>base64_string</em><span class="sig-paren">)</span><a class="headerlink" href="#client.save_b64_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves base64 string as bytes, then covert it back to an image array in
+tiff format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>base64_string</strong> – image output string in base 64</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>image array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>i (nparray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="client.upload_file">
+<code class="descclassname">client.</code><code class="descname">upload_file</code><span class="sig-paren">(</span><em>ID</em>, <em>filename</em>, <em>extension</em>, <em>filepathname</em><span class="sig-paren">)</span><a class="headerlink" href="#client.upload_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload files to server/database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ID</strong> (<em>str</em>) – user name</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – filename with no path and extension</p></li>
+<li><p><strong>extension</strong> (<em>str</em>) – image type</p></li>
+<li><p><strong>filepathname</strong> (<em>str</em>) – full filename with path and extension</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>message from server</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>r4.text (str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="client.user_metrics">
+<code class="descclassname">client.</code><code class="descname">user_metrics</code><span class="sig-paren">(</span><em>ID</em><span class="sig-paren">)</span><a class="headerlink" href="#client.user_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>GET user metrics from server
+:param ID: user name
+:type ID: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Dictionary containing the user metrics of</dt><dd><p>number of times used and latency for each method</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>r7.json() (dict)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">BME547_Final_Project</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">client module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI.html">GUI module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Mongo.html">Mongo module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">server module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_client.html">test_client module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_GUI.html">test_GUI module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_server.html">test_server module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_zl187_image_processing.html">test_zl187_image_processing module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zl187_image_processing.html">zl187_image_processing module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to BME547_Final_Project’s documentation!</a></li>
+      <li>Next: <a href="GUI.html" title="next chapter">GUI module</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Huisi Cai, Kim Lennox and Zhen Lin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/client.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
