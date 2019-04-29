@@ -69,3 +69,17 @@ def test_find_stats2():
     data_list.append(data3)
     A = find_stats("Histogram Equalization", data_list)
     assert A["Times used"] == 2
+
+
+def test_verify_newuser1():
+    from server import verify_newuser
+    users = ["Kim", "Sylvia", "Tiffany"]
+    x = verify_newuser(users, "Kim")
+    assert x is False
+
+
+def test_verify_newuser2():
+    from server import verify_newuser
+    users = ["Kim", "Sylvia", "Tiffany"]
+    x = verify_newuser(users, "Bob")
+    assert x is True
