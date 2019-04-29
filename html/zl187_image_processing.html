@@ -1,0 +1,293 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>zl187_image_processing module &#8212; BME547_Final_Project 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="test_zl187_image_processing module" href="test_zl187_image_processing.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-zl187_image_processing">
+<span id="zl187-image-processing-module"></span><h1>zl187_image_processing module<a class="headerlink" href="#module-zl187_image_processing" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="zl187_image_processing.check_color_or_gray">
+<code class="descclassname">zl187_image_processing.</code><code class="descname">check_color_or_gray</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="headerlink" href="#zl187_image_processing.check_color_or_gray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the image is in color or grayscale</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> – input image data (should be ndarray)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>a number that indicates whether the image is in color</dt><dd><p>or grayscale</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>color</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="zl187_image_processing.con_str">
+<code class="descclassname">zl187_image_processing.</code><code class="descname">con_str</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="headerlink" href="#zl187_image_processing.con_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Doing contrast stretch and count the time for processing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> – input image data (should be ndarray)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>image after contrast stretch
+time_process: time for doing the processing</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>img_str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="zl187_image_processing.get_size">
+<code class="descclassname">zl187_image_processing.</code><code class="descname">get_size</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="headerlink" href="#zl187_image_processing.get_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the size of the image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> – input image data (should be ndarray)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>number of the rows of the image data
+n: number of the columns of the image data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>m</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="zl187_image_processing.his_eq">
+<code class="descclassname">zl187_image_processing.</code><code class="descname">his_eq</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="headerlink" href="#zl187_image_processing.his_eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Doing histogram equalization and count the time for processing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> – input image data (should be ndarray)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>image after histogram equalization
+time_process: time for doing the processing</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>img_eq</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="zl187_image_processing.log_com">
+<code class="descclassname">zl187_image_processing.</code><code class="descname">log_com</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="headerlink" href="#zl187_image_processing.log_com" title="Permalink to this definition">¶</a></dt>
+<dd><p>Doing log compression and count the time for processing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> – input image data (should be ndarray)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>image after log compression
+time_process: time for doing the processing</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>img_str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="zl187_image_processing.make_fig">
+<code class="descclassname">zl187_image_processing.</code><code class="descname">make_fig</code><span class="sig-paren">(</span><em>his1</em>, <em>bins1</em>, <em>his2</em>, <em>bins2</em>, <em>his3</em>, <em>bins3</em><span class="sig-paren">)</span><a class="headerlink" href="#zl187_image_processing.make_fig" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Converts histogram into image to</dt><dd><p>be returned to user</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>his1</strong> – histogram values of red channel</p></li>
+<li><p><strong>his2</strong> – histogram values of green channel</p></li>
+<li><p><strong>his3</strong> – histogram values of blue channel</p></li>
+<li><p><strong>bins1</strong> – bins for red channel</p></li>
+<li><p><strong>bins2</strong> – bins for green channel</p></li>
+<li><p><strong>bine3</strong> – bins for blue channel</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Image of 3 channel histogram</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>fig</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="zl187_image_processing.make_figbw">
+<code class="descclassname">zl187_image_processing.</code><code class="descname">make_figbw</code><span class="sig-paren">(</span><em>his1</em>, <em>bins1</em><span class="sig-paren">)</span><a class="headerlink" href="#zl187_image_processing.make_figbw" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Converts histogram into image that can</dt><dd><p>be returned to user</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>his1</strong> – histogram values</p></li>
+<li><p><strong>bins1</strong> – bins</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Image of 1 channel histogram</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>fig</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="zl187_image_processing.plot_his">
+<code class="descclassname">zl187_image_processing.</code><code class="descname">plot_his</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="headerlink" href="#zl187_image_processing.plot_his" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot histogram for an input image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> – input image data (should be ndarray)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>normalized histogram value
+bins: graylevel scale values</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>his</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="zl187_image_processing.rev">
+<code class="descclassname">zl187_image_processing.</code><code class="descname">rev</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="headerlink" href="#zl187_image_processing.rev" title="Permalink to this definition">¶</a></dt>
+<dd><p>Doing reverse video and count the time for processing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> – input image data (should be ndarray)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>image after reverse video
+time_process: time for doing the processing</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>img_rev</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">BME547_Final_Project</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="client.html">client module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI.html">GUI module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Mongo.html">Mongo module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">server module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_client.html">test_client module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_GUI.html">test_GUI module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_server.html">test_server module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_zl187_image_processing.html">test_zl187_image_processing module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">zl187_image_processing module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="test_zl187_image_processing.html" title="previous chapter">test_zl187_image_processing module</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Huisi Cai, Kim Lennox and Zhen Lin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/zl187_image_processing.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

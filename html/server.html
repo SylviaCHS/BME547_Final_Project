@@ -1,0 +1,580 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>server module &#8212; BME547_Final_Project 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="test_client module" href="test_client.html" />
+    <link rel="prev" title="Mongo module" href="Mongo.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-server">
+<span id="server-module"></span><h1>server module<a class="headerlink" href="#module-server" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="server.GetImage">
+<code class="descclassname">server.</code><code class="descname">GetImage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.GetImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests single image from database
+:param Input JSON: “username”: Username</p>
+<blockquote>
+<div><p>“filename”: name of desired image</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Dictionary with keys</dt><dd><p>File: filename
+Image: Image in b64 tiff format
+Process: processing algorithm applied</p>
+</dd>
+</dl>
+<p>If user/image does not exist, an error message will
+be returned to the client.</p>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>outjson</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.NewImage">
+<code class="descclassname">server.</code><code class="descname">NewImage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.NewImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post request for new image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>json file</strong> (<em>Input</em>) – </p></li>
+<li><p><strong>&quot;username&quot;</strong> – username</p></li>
+<li><p><strong>&quot;filename&quot;</strong> – image file name</p></li>
+<li><p><strong>&quot;rawimage&quot;</strong> – image as base 64 string</p></li>
+<li><p><strong>&quot;extension&quot;</strong> – original file type</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>String verifying that image</dt><dd><p>has been saved</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>outstr</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.NewUser">
+<code class="descclassname">server.</code><code class="descname">NewUser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.NewUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post request for new user</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>with input</strong> (<em>JSON</em>) – </p></li>
+<li><p><strong>&quot;username&quot;</strong> – Username</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>String verifying user has been saved</dt><dd><p>to database</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>outstr</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.bytes_to_plot">
+<code class="descclassname">server.</code><code class="descname">bytes_to_plot</code><span class="sig-paren">(</span><em>bytes</em>, <em>extension</em><span class="sig-paren">)</span><a class="headerlink" href="#server.bytes_to_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts raw TIF format in Mongo to numpy array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bytes</strong> – image in byte</p></li>
+<li><p><strong>extension</strong> – file format (always tiff)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array version of image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>i</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.convert_file">
+<code class="descclassname">server.</code><code class="descname">convert_file</code><span class="sig-paren">(</span><em>I</em>, <em>extension</em><span class="sig-paren">)</span><a class="headerlink" href="#server.convert_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts raw bytes of any format into any
+other format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>I</strong> – byte format of image</p></li>
+<li><p><strong>extension</strong> – desired output file type</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>byte format in desired file type</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.download_image">
+<code class="descclassname">server.</code><code class="descname">download_image</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.download_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a base 64 string of any file format
+requested by user</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>JSON</strong> (<em>Input</em>) – “username”: username
+“filename”: name of image in database
+“extension”: desired file type’</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Dictionary with one entry</dt><dd><p>”Image”: image in base 64 string</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Outstring</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.find_image">
+<code class="descclassname">server.</code><code class="descname">find_image</code><span class="sig-paren">(</span><em>filename</em>, <em>username</em><span class="sig-paren">)</span><a class="headerlink" href="#server.find_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries database for image
+:param Username: username
+:param filename: name of desired image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>dictionary of image along with</dt><dd><p>all metadata</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.find_stats">
+<code class="descclassname">server.</code><code class="descname">find_stats</code><span class="sig-paren">(</span><em>instr</em>, <em>List</em><span class="sig-paren">)</span><a class="headerlink" href="#server.find_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds number of times a specific algorithm
+has been used by a user</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instr</strong> – Processing method</p></li>
+<li><p><strong>List</strong> – List of all images from a user</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl>
+<dt>list with 2 elements:</dt><dd><dl class="simple">
+<dt>count: number of times algorithm</dt><dd><p>was used</p>
+</dd>
+</dl>
+<p>latmean: average time to execute</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>info</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.get_histogram">
+<code class="descclassname">server.</code><code class="descname">get_histogram</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.get_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Server request for image of histogram
+:param Input JSON: Username: username</p>
+<blockquote>
+<div><p>Filename: filename</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>base 64 string of histogram image</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>outstring</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.get_image_list">
+<code class="descclassname">server.</code><code class="descname">get_image_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.get_image_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>A route to GET a list of processed image name from MongoDB
+:param Input json keys: “username”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of all images the user has stored</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>outjson</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.get_metrics">
+<code class="descclassname">server.</code><code class="descname">get_metrics</code><span class="sig-paren">(</span><em>username</em><span class="sig-paren">)</span><a class="headerlink" href="#server.get_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Searches database for relevant user metrics
+:param Username: username</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>List of all algorithms with</dt><dd><p>times used and mean time to
+execute</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Outdict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.get_process">
+<code class="descclassname">server.</code><code class="descname">get_process</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.get_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes image and saves to database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>json</strong> (<em>Input</em>) – </p></li>
+<li><p><strong>&quot;username&quot;</strong> – username</p></li>
+<li><p><strong>&quot;filename&quot;</strong> – name of image to be processed</p></li>
+<li><p><strong>&quot;process&quot;</strong> – Desired processing algorithm</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Confirmation that image was processed</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>outjson</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.get_process_image_list">
+<code class="descclassname">server.</code><code class="descname">get_process_image_list</code><span class="sig-paren">(</span><em>username</em><span class="sig-paren">)</span><a class="headerlink" href="#server.get_process_image_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of names of processed image
+:param JSON input: “username”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Names of all files that have been</dt><dd><p>processed by the user</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pro_filenames (list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.image_metrics">
+<code class="descclassname">server.</code><code class="descname">image_metrics</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.image_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain metrics for a certain image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json</strong> (<em>Input</em>) – “username”: username
+“filename”: name of image</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>List of all algorithms with</dt><dd><p>number of times used and time
+to execute</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>outdict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.plot_to_bytes">
+<code class="descclassname">server.</code><code class="descname">plot_to_bytes</code><span class="sig-paren">(</span><em>plot</em><span class="sig-paren">)</span><a class="headerlink" href="#server.plot_to_bytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts numpy array into raw TIF format for MongoModel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>plot</strong> – numpy array version of image</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>image in bytes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.process_image">
+<code class="descclassname">server.</code><code class="descname">process_image</code><span class="sig-paren">(</span><em>iraw</em>, <em>process</em><span class="sig-paren">)</span><a class="headerlink" href="#server.process_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes image as specified by user</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iraw</strong> – Image to be processed</p></li>
+<li><p><strong>process</strong> – processing method</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>list with 2 entries: processed image</dt><dd><p>and time to process image</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>i_process</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.read_data_as_b64">
+<code class="descclassname">server.</code><code class="descname">read_data_as_b64</code><span class="sig-paren">(</span><em>I_bytes</em><span class="sig-paren">)</span><a class="headerlink" href="#server.read_data_as_b64" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used for converting input data into base64</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>I_bytes</strong> – image in uint8 bytes</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>image output string in base 64</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>b64_string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.save_b64_image">
+<code class="descclassname">server.</code><code class="descname">save_b64_image</code><span class="sig-paren">(</span><em>base64_string</em><span class="sig-paren">)</span><a class="headerlink" href="#server.save_b64_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves base64 string as bytes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>base64_string</strong> – image output string in base 64</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>image in bytes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>image_bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.save_image">
+<code class="descclassname">server.</code><code class="descname">save_image</code><span class="sig-paren">(</span><em>user</em>, <em>filename</em>, <em>image_tif</em>, <em>process</em>, <em>latency</em>, <em>size</em>, <em>hist</em><span class="sig-paren">)</span><a class="headerlink" href="#server.save_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that saves image to Mongo database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user</strong> – username</p></li>
+<li><p><strong>filename</strong> – desired file name in database</p></li>
+<li><p><strong>image_tif</strong> – tiff image in byte format</p></li>
+<li><p><strong>process</strong> – processing algorithm applied to image</p></li>
+<li><p><strong>latency</strong> – time to process image</p></li>
+<li><p><strong>size</strong> – image size</p></li>
+<li><p><strong>hist</strong> – histogram values of image</p></li>
+<li><p><strong>bins</strong> – bin locations of image</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Confirmation that image has been saved</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>outstr</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.user_metrics">
+<code class="descclassname">server.</code><code class="descname">user_metrics</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.user_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return metrics for given user
+:param Input json: “username:: username</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>dictionary of all image processing
+algorithms, times used, and time to execute</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>outjson</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.verify_newimage">
+<code class="descclassname">server.</code><code class="descname">verify_newimage</code><span class="sig-paren">(</span><em>filename</em>, <em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#server.verify_newimage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks existence of filename</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – Image name</p></li>
+<li><p><strong>ID</strong> – Username</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Boolean value. If x is true,
+image does not exist in database</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>x</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.verify_newuser">
+<code class="descclassname">server.</code><code class="descname">verify_newuser</code><span class="sig-paren">(</span><em>users</em>, <em>ID</em><span class="sig-paren">)</span><a class="headerlink" href="#server.verify_newuser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks existence of username</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ID</strong> – Username</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Boolean value. If x = True, user does
+not exist in database</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>x</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">BME547_Final_Project</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="client.html">client module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI.html">GUI module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Mongo.html">Mongo module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">server module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_client.html">test_client module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_GUI.html">test_GUI module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_server.html">test_server module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_zl187_image_processing.html">test_zl187_image_processing module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zl187_image_processing.html">zl187_image_processing module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="Mongo.html" title="previous chapter">Mongo module</a></li>
+      <li>Next: <a href="test_client.html" title="next chapter">test_client module</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Huisi Cai, Kim Lennox and Zhen Lin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/server.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
