@@ -1,0 +1,433 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>GUI module &#8212; BME547_Final_Project 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Mongo module" href="Mongo.html" />
+    <link rel="prev" title="client module" href="client.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-GUI">
+<span id="gui-module"></span><h1>GUI module<a class="headerlink" href="#module-GUI" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="GUI.GUI">
+<em class="property">class </em><code class="descclassname">GUI.</code><code class="descname">GUI</code><span class="sig-paren">(</span><em>root</em><span class="sig-paren">)</span><a class="headerlink" href="#GUI.GUI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="GUI.GUI.display_metrics">
+<code class="descname">display_metrics</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.GUI.display_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback function for metrics_btn
+A window will pop-up to display the user metadata of previous user
+actions / metrics including:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>How many times has a user run each process</p></li>
+<li><p>latency for running different processing</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="GUI.GUI.display_metrics2">
+<code class="descname">display_metrics2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.GUI.display_metrics2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback function for im_metrics_btn1
+A window will pop-up to display the original image metadata
+including:</p>
+<blockquote>
+<div><p>Timestamp when uploaded
+Time to process the image(s)
+Image size (e.g., X x Y pixels)</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="GUI.GUI.display_metrics3">
+<code class="descname">display_metrics3</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.GUI.display_metrics3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback function for im_metrics_btn2
+A window will pop-up to display the processed image metadata
+including:</p>
+<blockquote>
+<div><p>Timestamp when uploaded
+Time to process the image(s)
+Image size (e.g., X x Y pixels)</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="GUI.GUI.download_function">
+<code class="descname">download_function</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.GUI.download_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback function that controls the download button</p>
+<dl class="simple">
+<dt>When clicked, it would:</dt><dd><ul class="simple">
+<li><p>Ask user for the directory they want to save the file</p></li>
+<li><p>If a single image is chosen, the original and processed image as
+as well as the before and after histogram will be displayed in
+GUI. An image will be also saved to the designated folder</p></li>
+<li><p>If multiple images are chosen, NO images will be displayed. A
+zip archive of these images will be save to the designated
+folder.</p></li>
+<li><p>User could choose the file type they want, default is JPEG.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="GUI.GUI.import_file">
+<code class="descname">import_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.GUI.import_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a pop-up window to let user choose file(s)
+The full filepath will be stored in the class</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GUI.GUI.load_function">
+<code class="descname">load_function</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.GUI.load_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Control the load button
+Load a list of processed images in the database. User could choose one
+or more images to download. If only one image is chosen the resulted
+plot will be displayed in the GUI. If multiple file is chosen, the
+files will be zip to a zip archive and save to a designated path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GUI.GUI.run_function">
+<code class="descname">run_function</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GUI.GUI.run_function" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Control the ‘run analysis’ button to do the following commands:</dt><dd><ul class="simple">
+<li><p>Check if user is new. If yes, creat new user in mongoDB</p></li>
+<li><p>Upload file(s) as images to mongoDB</p></li>
+<li><p>Process the images using the specified
+method and store in mongoDB</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="GUI.check_msg">
+<code class="descclassname">GUI.</code><code class="descname">check_msg</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="headerlink" href="#GUI.check_msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if message contains Error or Warning for run_analysis functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str</em>) – Message from server/client code</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>True for there is an error
+msg (str): Message informing the user if the program is running</p>
+<blockquote>
+<div><p>properly or there is an error or warning.</p>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>err (bool)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GUI.check_multi_single">
+<code class="descclassname">GUI.</code><code class="descname">check_multi_single</code><span class="sig-paren">(</span><em>filenames</em><span class="sig-paren">)</span><a class="headerlink" href="#GUI.check_multi_single" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if multiple or single file is chosen.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filenames</strong> (<em>list</em>) – A list of all the filepaths or string of
+filepath</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Return whether it is a single file (True)</dt><dd><p>or multiple files (False)</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>single (bool)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GUI.check_r_type">
+<code class="descclassname">GUI.</code><code class="descname">check_r_type</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="headerlink" href="#GUI.check_r_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the output from server is a string of error message
+Raise error if it is string.
+It should be a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>r</strong> (<em>str</em>) – Message from server</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GUI.check_user">
+<code class="descclassname">GUI.</code><code class="descname">check_user</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="headerlink" href="#GUI.check_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if message contains Error for get new_user_id function.
+Raise a ValueError if message contains “Error”
+:param msg: Message from server code
+:type msg: str</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="GUI.download_multiple">
+<code class="descclassname">GUI.</code><code class="descname">download_multiple</code><span class="sig-paren">(</span><em>select_files</em>, <em>savepath</em>, <em>id</em>, <em>ext</em><span class="sig-paren">)</span><a class="headerlink" href="#GUI.download_multiple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download multiple processed images in a zip archive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>select_files</strong> (<em>list</em>) – list of names of selected images</p></li>
+<li><p><strong>savepath</strong> (<em>str</em>) – path of folder user chose</p></li>
+<li><p><strong>id</strong> (<em>str</em>) – user name</p></li>
+<li><p><strong>ext</strong> (<em>str</em>) – User specified image type</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GUI.get_file_name">
+<code class="descclassname">GUI.</code><code class="descname">get_file_name</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="headerlink" href="#GUI.get_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract filename and extension from filepath</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em>) – full filepath of the image including filename and ext</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>filename without path and extension
+extension (str): image type, ex. ‘.png’</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>filename (str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GUI.get_image_pair">
+<code class="descclassname">GUI.</code><code class="descname">get_image_pair</code><span class="sig-paren">(</span><em>filename</em>, <em>ID</em><span class="sig-paren">)</span><a class="headerlink" href="#GUI.get_image_pair" title="Permalink to this definition">¶</a></dt>
+<dd><p>Communicate with server and database to get original and processed images,
+pre and post-processing histogram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – filename of processed image</p></li>
+<li><p><strong>ID</strong> (<em>str</em>) – user name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>post-processed image
+raw_img (image object): original image
+raw_img_name (str): original image name
+pro_hist (image object): histogram of original image
+raw_hist (image object): histogram of processed image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pro_img (image object)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GUI.image_size">
+<code class="descclassname">GUI.</code><code class="descname">image_size</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#GUI.image_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the image size of the images to be displayed in GUI
+The original width to height ratio will be preserved.</p>
+<p>Max width/height is set to be 300, and the other dimension will be
+adjusted accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>size</strong> (<em>list</em>) – Original image size</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>New image size suitable for GUI</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>new_size (list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GUI.run_analysis">
+<code class="descclassname">GUI.</code><code class="descname">run_analysis</code><span class="sig-paren">(</span><em>filepath</em>, <em>ID</em>, <em>method</em><span class="sig-paren">)</span><a class="headerlink" href="#GUI.run_analysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call other function to run analysis and upload the results to the database
+It can both accept one single .zip file or one/multiple image file(s)
+:param filepath: A tuple of filepath(s)
+:type filepath: tuple
+:param ID: user name
+:type ID: str
+:param method: Required processing method
+:type method: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Message informing the user if the program is running</dt><dd><p>properly or there is an error or warning.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>msg (str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GUI.run_images_analysis">
+<code class="descclassname">GUI.</code><code class="descname">run_images_analysis</code><span class="sig-paren">(</span><em>filepath</em>, <em>ID</em>, <em>method</em><span class="sig-paren">)</span><a class="headerlink" href="#GUI.run_images_analysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload image(s) and run the required analysis for multiple or single image
+file(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em>) – filepath of the image including filename</p></li>
+<li><p><strong>ID</strong> (<em>str</em>) – user name</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – user specified image processing method</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Message informing the user if the program is running</dt><dd><p>properly or there is an error or warning.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>msg (str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GUI.run_zip_analysis">
+<code class="descclassname">GUI.</code><code class="descname">run_zip_analysis</code><span class="sig-paren">(</span><em>filepath</em>, <em>ID</em>, <em>method</em><span class="sig-paren">)</span><a class="headerlink" href="#GUI.run_zip_analysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run image analysis for zip archive</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em>) – full filepath with filename of the zip archive</p></li>
+<li><p><strong>ID</strong> (<em>str</em>) – user name</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – processing method</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Message informing the user if the program is running</dt><dd><p>properly or there is an error or warning.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>msg (str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">BME547_Final_Project</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="client.html">client module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">GUI module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Mongo.html">Mongo module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">server module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_client.html">test_client module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_GUI.html">test_GUI module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_server.html">test_server module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_zl187_image_processing.html">test_zl187_image_processing module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zl187_image_processing.html">zl187_image_processing module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="client.html" title="previous chapter">client module</a></li>
+      <li>Next: <a href="Mongo.html" title="next chapter">Mongo module</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Huisi Cai, Kim Lennox and Zhen Lin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/GUI.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
