@@ -38,7 +38,7 @@ def test_check_multi_single(filenames, expected):
 @pytest.mark.parametrize("msg, expected", [
         ('there is an Error', [bool(1), 'there is an Error']),
         ('there is a Warning',
-         [bool(0), 'Success! Warning: Image already exists.' \
+         [bool(0), 'Success! Warning: Image already exists.'
           'Processing ran on existing image']),
         ('everythin is fine', [bool(0), 'Image saved successfully'])
          ])
