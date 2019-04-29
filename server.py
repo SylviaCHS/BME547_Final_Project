@@ -1,13 +1,8 @@
 import logging
-import os
 from flask import Flask, jsonify, request
-from pymodm import connect
-from pymodm import MongoModel, fields
 import numpy as np
 import datetime
-import math
 from Mongo import User
-# import matplotlib.pyplot as plt
 import base64
 import io
 from io import BytesIO
@@ -283,7 +278,7 @@ def get_process_image_list(username):
     Args:
         JSON input: "username"
     Returns:
-        pro_filenames: All files that have been
+        pro_filenames (list): Names of all files that have been
                        processed by the user
     """
     user = User.objects.raw({"_id": username}).first()
