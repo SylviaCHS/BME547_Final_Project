@@ -98,7 +98,7 @@ def convert_file(I, extension):
     return data
 
 
-def verify_newuser(ID):
+def verify_newuser(users, ID):
     """
     Checks existence of username
 
@@ -108,16 +108,16 @@ def verify_newuser(ID):
         x: Boolean value. If x = True, user does
         not exist in database
     """
-    users = User.objects.raw({})
+    # users = ID # User.objects.raw({})
 
     x = True
     for u in users:
-        if ID == str(u.UserID):
+        if ID == str(u):
             x = False
     return x
 
 
-def verify_newimage(filename, ID):
+def verify_newimage(filename, files):
     """
     Checks existence of filename
 
@@ -128,9 +128,8 @@ def verify_newimage(filename, ID):
         x: Boolean value. If x is true,
         image does not exist in database
     """
-    u = User.objects.raw({"_id": ID}).first()
     x = True
-    cursor = u.filenames
+    cursor = files
     if cursor == []:
         x = True
 
@@ -156,7 +155,11 @@ def NewUser():
     r = request.get_json()
     username = r["username"]
     ID = str(username)
-    x = verify_newuser(username)
+    users = []
+    u1 = User.objects.raw({})
+    for i in u1:
+        users.append(i.UserID)
+    x = verify_newuser(users, ID)
     if x is True:
         u = User(UserID=username)
         u.save()
@@ -188,10 +191,16 @@ def NewImage():
     filename = str(r["filename"])
     rawimage = str(r["Image"])
     extension = str(r["extension"])
-    y = verify_newuser(username)
+    u1 = User.objects.raw({})
+    users = []
+    for i in u1:
+        users.append(i.UserID)
+    y = verify_newuser(users, username)
 
     if y is False:
-        x = verify_newimage(filename, username)
+        u = User.objects.raw({"_id": username}).first()
+        files = u.filenames
+        x = verify_newimage(filename, files)
 
         if x is True:
             user = User.objects.raw({"_id": username}).first()
@@ -266,7 +275,11 @@ def get_image_list():
     """
     r = request.get_json()
     username = str(r["username"])
-    x = verify_newuser(username)
+    u1 = User.objects.raw({})
+    users = []
+    for i in u1:
+        users.append(i.UserID)
+    x = verify_newuser(users, username)
     if x is False:
         pro_filenames = get_process_image_list(username)
         outjson = pro_filenames
@@ -312,11 +325,16 @@ def GetImage():
     r = request.get_json()
     username = str(r["username"])
     filename = str(r["filename"])
-
-    x = verify_newuser(username)
+    u1 = User.objects.raw({})
+    users = []
+    for i in u1:
+        users.append(i.UserID)
+        x = verify_newuser(users, username)
 
     if x is False:
-        y = verify_newimage(filename, username)
+        u = User.objects.raw({"_id": username}).first()
+        files = u.filenames
+        y = verify_newimage(filename, files)
         if y is False:
             user = User.objects.raw({"_id": username}).first()
             image = find_image(filename, username)
@@ -396,9 +414,11 @@ def get_process():
     username = str(r["username"])
     process = str(r["process"])
     newfilename = filename+"_"+process
-    y = verify_newimage(filename, username)
+    u = User.objects.raw({"_id": username}).first()
+    files = u.filenames
+    y = verify_newimage(filename, files)
     if y is False:
-        x = verify_newimage(newfilename, username)
+        x = verify_newimage(newfilename, files)
         if x is True:
             user = User.objects.raw({"_id": username}).first()
             List = user.ImageFile
@@ -441,7 +461,11 @@ def user_metrics():
     """
     r = request.get_json()
     username = r["username"]
-    x = verify_newuser(username)
+    u1 = User.objects.raw({})
+    users = []
+    for i in u1:
+        users.append(i.UserID)
+    x = verify_newuser(users, username)
     if x is False:
         outjson = get_metrics(username)
     else:
@@ -466,10 +490,16 @@ def image_metrics():
     r = request.get_json()
     username = r["username"]
     filename = r["filename"]
-    x = verify_newuser(username)
+    u1 = User.objects.raw({})
+    users = []
+    for i in u1:
+        users.append(i.UserID)
+    # users = u1.UserID
+    x = verify_newuser(users, username)
     if x is False:
-        user = User.objects.raw({"_id": username}).first()
-        y = verify_newimage(filename, username)
+        u = User.objects.raw({"_id": username}).first()
+        files = u.filenames
+        y = verify_newimage(filename, files)
         if y is False:
             I = find_image(filename, username)
             outdict = {
@@ -561,9 +591,15 @@ def download_image():
     username = r["username"]
     filename = r["filename"]
     extension = r["extension"]
-    x = verify_newuser(username)
+    u1 = User.objects.raw({})
+    users = []
+    for i in u1:
+        users.append(i.UserID)
+    x = verify_newuser(users, username)
     if x is False:
-        y = verify_newimage(filename, username)
+        u = User.objects.raw({"_id": username}).first()
+        files = u.filenames
+        y = verify_newimage(filename, files)
         if y is False:
             I = find_image(filename, username)
             file = I["Image"]
@@ -590,9 +626,15 @@ def get_histogram():
     r = request.get_json()
     username = r["username"]
     filename = r["filename"]
-    x = verify_newuser(username)
+    u1 = User.objects.raw({})
+    users = []
+    for i in u1:
+        users.append(i.UserID)
+    x = verify_newuser(users, username)
     if x is False:
-        y = verify_newimage(filename, username)
+        u = User.objects.raw({"_id": username}).first()
+        files = u.filenames
+        y = verify_newimage(filename, files)
         if y is False:
             I = find_image(filename, username)
             file = I["Histogram"]
