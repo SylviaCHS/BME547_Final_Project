@@ -373,10 +373,10 @@ def get_image_pair(filename, ID):
             return pro_img, raw_img, raw_img_name, pro_hist, raw_hist
 
 
-
 def check_r_type(r):
     if type(r) is str:
         raise TypeError('Get Error message.')
+
 
 def get_file_name(filepath):  # need pytest
     """

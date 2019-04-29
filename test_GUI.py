@@ -33,3 +33,20 @@ def test_check_multi_single(filenames, expected):
     from GUI import check_multi_single
     single = check_multi_single(filenames)
     assert single == expected
+
+
+@pytest.mark.parametrize("test_list", ['sks,', '232kdkf', 'b329dc'])
+def test_check_data(test_list):
+    from GUI import check_r_type
+    with pytest.raises(ValueError):
+        check_r_type(test_list)
+
+
+@pytest.mark.parametrize("test_list", ['Error',
+                                       '..Error;dsf',
+                                       '12123Error  dfd',
+                                       'ksdfljdsError'])
+def test_check_data(test_list):
+    from GUI import check_user
+    with pytest.raises(ValueError):
+        check_user(test_list)
