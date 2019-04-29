@@ -72,6 +72,9 @@ The software uses MongoDB as the database. The follow fields existed in MongoDB:
 ### Warnings
 Occasionally, the MongoDB could be really slow when the size of the stored data is too large or when the server is overload. If the GUI is not responding for a long time, please contact one of our team member to request to change database/ clear the history.
 
+#### For Mac Users
+The package Matplotlib does not run well in Mac OS system so the histograms may not be displayed. Please try to use run the code in Windows system.
+
 ### Status Code
   `400` : There is an error and data is not processed. Error could include: Missing keys, wrong file type, user ID is not in the database, new user ID already exist, cannot find image in databse, etc.
   `200` : Requests has been processed sucessfully.
