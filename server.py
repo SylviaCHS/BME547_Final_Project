@@ -272,7 +272,7 @@ def get_image_list():
         outjson = pro_filenames
         code = 200
     else:
-        outjson = ["Image does not exist. Please upload image"]
+        outjson = ["Error: User does not exist."]
         code = 400
     return jsonify(outjson), code
 
