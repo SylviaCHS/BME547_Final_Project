@@ -19,4 +19,3 @@ def test_save_b64_image():
     i = save_b64_image(encoded_string)
     I = mpimg.imread('KimAndRevcopy.tiff')
     assert i.all() == I.all()
-
