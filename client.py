@@ -17,7 +17,8 @@ def post_new_user(ID):
     user = {
         "username": ID,
     }
-    r3 = requests.post("http://vcm-9030.vm.duke.edu:5000/api/new_user", json=user)
+    r3 = requests.post("http://vcm-9030.vm.duke.edu:5000/api/new_user",
+                       json=user)
     return r3.text
 
 
@@ -42,7 +43,8 @@ def upload_file(ID, filename, extension, filepathname):
         "filename": filename,
         "extension": extension
     }
-    r4 = requests.post("http://vcm-9030.vm.duke.edu:5000/api/new_image", json=userimage)
+    r4 = requests.post("http://vcm-9030.vm.duke.edu:5000/api/new_image",
+                       json=userimage)
     return r4.text
 
 
@@ -58,8 +60,8 @@ def get_image_list(username):
 
     """
 
-    r5 = requests.get('http://vcm-9030.vm.duke.edu:5000/api/get_name/image_list',
-                      json={"username": username})
+    r5 = requests.get('http://vcm-9030.vm.duke.edu:5000/'
+                      'api/get_name/image_list', json={"username": username})
     outfile = r5.json()
     return outfile
 
@@ -84,7 +86,8 @@ def get_image_file(ID, filename):
         "username": ID,
         "filename": filename
     }
-    r6 = requests.get("http://vcm-9030.vm.duke.edu:5000/api/get_image", json=imjson)
+    r6 = requests.get("http://vcm-9030.vm.duke.edu:5000/api/get_image",
+                      json=imjson)
     return r6.json()
 
 
@@ -126,7 +129,8 @@ def process_image(ID, filename, method):
         "filename": filename,
         "process": method
     }
-    r6 = requests.post("http://vcm-9030.vm.duke.edu:5000/api/process_image", json=pjson)
+    r6 = requests.post("http://vcm-9030.vm.duke.edu:5000/api/process_image",
+                       json=pjson)
     print(r6.json)
     return r6.json()
 
@@ -143,7 +147,8 @@ def user_metrics(ID):
     mjson = {
         "username": ID
     }
-    r7 = requests.get("http://vcm-9030.vm.duke.edu:5000/api/user_metrics", json=mjson)
+    r7 = requests.get("http://vcm-9030.vm.duke.edu:5000/api/user_metrics",
+                      json=mjson)
     return r7.json()
 
 
@@ -164,7 +169,8 @@ def image_metrics(ID, filename):
         "username": ID,
         "filename": filename
     }
-    r8 = requests.get("http://vcm-9030.vm.duke.edu:5000/api/image_metrics", json=mjson)
+    r8 = requests.get("http://vcm-9030.vm.duke.edu:5000/api/image_metrics",
+                      json=mjson)
     return r8.json()
 
 
@@ -183,7 +189,8 @@ def get_histogram(ID, filename):
         "username": ID,
         "filename": filename,
     }
-    r = requests.get("http://vcm-9030.vm.duke.edu:5000/api/get_histogram", json=djson)
+    r = requests.get("http://vcm-9030.vm.duke.edu:5000/api/get_histogram",
+                     json=djson)
     outfile = r.json()
     I2_b64 = outfile["Histogram"]
     i = save_b64_image(I2_b64)
